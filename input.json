@@ -1,0 +1,78 @@
+import json
+
+class InputParser:
+    """
+    PURPOSE: Automatically parses structural data and determines system topology 
+             for frames with an unknown number of nodes and members.
+    """
+    def __init__(self, file_path):
+        """
+        INPUTS: file_path (str) - Path to the JSON input file.
+        """
+        self.file_path = file_path
+        self.data = self._load_json()
+        
+    def _load_json(self):
+        """PURPOSE: Safely load the JSON data from the provided path."""
+        try:
+            with open(self.file_path, 'r') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            print(f"Error: File {self.file_path} not found.")
+            return None
+
+    def get_topology_info(self):
+        """
+        PURPOSE: Identifies the scale of the structure dynamically.
+        OUTPUTS: num_nodes (int), num_elements (int)
+        """
+        num_nodes = len(self.data['nodes'])
+        num_elements = len(self.data['connectivity'])
+        return num_nodes, num_elements
+
+    def calculate_optimized_bandwidth(self):
+        """
+        PURPOSE: Calculates the optimal half-bandwidth (BW) for the global stiffness matrix.
+        OUTPUTS: half_bw (int)
+        ASSUMPTION: 2D Frame analysis with 3 Degrees of Freedom (DOF) per node. [cite: 118]
+        """
+        max_node_diff = 0
+        for element in self.data['connectivity']:
+            # Connectivity contains node IDs (usually 1-indexed)
+            diff = abs(element['start_node'] - element['end_node'])
+            if diff > max_node_diff:
+                max_node_diff = diff
+        
+        # Bandwidth Formula for 2D Frames: (max_node_difference + 1) * 3 - 1
+        half_bw = (max_node_diff + 1) * 3 - 1
+        return half_bw
+
+    def get_structural_data(self):
+        """
+        PURPOSE: Converts JSON objects into lists required by the 13-step algorithm. 
+        OUTPUTS: xy (list), m_props (list), connectivity (list), supports (list), loads (list)
+        """
+        # Node coordinates [X, Y]
+        xy = [[n['x'], n['y']] for n in self.data['nodes']]
+        
+        # Material properties [Area, Inertia, E]
+        m_props = [[m['A'], m['I'], m['E']] for m in self.data['materials']]
+        
+        # Connectivity [StartNode, EndNode, MaterialID]
+        connectivity = [[e['start_node'], e['end_node'], e['mat_id']] for e in self.data['connectivity']]
+        
+        # Boundary Conditions (0: Free, 1: Restrained)
+        # Assuming defaults to 0 if not specified
+        num_nodes = len(xy)
+        supports = [[0, 0, 0] for _ in range(num_nodes)]
+        for s in self.data['supports']:
+            idx = s['node_id'] - 1 # Convert to 0-indexed
+            supports[idx] = [s['rx'], s['ry'], s['rz']]
+            
+        # Nodal Loads [Fx, Fy, Mz]
+        loads = [[0.0, 0.0, 0.0] for _ in range(num_nodes)]
+        for l in self.data['loads']:
+            idx = l['node_id'] - 1
+            loads[idx] = [l['fx'], l['fy'], l['mz']]
+            
+        return xy, m_props, connectivity, supports, loads
