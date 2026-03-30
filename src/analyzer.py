@@ -1,87 +1,73 @@
-import math
-from src.matrix_lib import BandedSymmetricMatrix
-from src.solver import Solver
-
-class FrameAnalyzer:
+class InputParser:
     """
-    PURPOSE: Executes structural analysis for frames with dynamic node/member counts.
-    Handles nodal loads and equivalent member loads (UDL, Point Loads).
+    PURPOSE: Reads a formatted .txt file to build structural models dynamically.
     """
-    def __init__(self, xy, m_props, connectivity, supports, nodal_loads, member_loads, half_bw):
-        self.xy = xy
-        self.m_props = m_props
-        self.connectivity = connectivity
-        self.supports = supports
-        self.nodal_loads = nodal_loads
-        self.member_loads = member_loads # New: List of loads on members
-        self.half_bw = half_bw
+    def __init__(self, file_path):
+        self.file_path = file_path
+        self.nodes = []
+        self.elements = []
+        self.materials = []
+        self.supports = []
+        self.nodal_loads = []
+        self.member_loads = []
+
+    def parse_txt(self):
+        """PURPOSE: Reads the .txt file line by line and populates structural lists."""
+        current_section = None
+        try:
+            with open(self.file_path, 'r') as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith('#'): continue # Boş satır/yorum geç
+                    
+                    if line.startswith('*'):
+                        current_section = line.upper()
+                        continue
+                    
+                    data = [d.strip() for d in line.split(',')]
+                    
+                    if current_section == "*NODES":
+                        self.nodes.append({'id': int(data[0]), 'x': float(data[1]), 'y': float(data[2])})
+                    
+                    elif current_section == "*ELEMENTS":
+                        self.elements.append({'id': int(data[0]), 'start': int(data[1]), 'end': int(data[2]), 'mat': int(data[3])})
+                    
+                    elif current_section == "*MATERIALS":
+                        self.materials.append({'id': int(data[0]), 'E': float(data[1]), 'A': float(data[2]), 'I': float(data[3])})
+                    
+                    elif current_section == "*SUPPORTS":
+                        self.supports.append({'node_id': int(data[0]), 'rx': int(data[1]), 'ry': int(data[2]), 'rz': int(data[3])})
+                    
+                    elif current_section == "*NODAL_LOADS":
+                        self.nodal_loads.append({'node_id': int(data[0]), 'fx': float(data[1]), 'fy': float(data[2]), 'mz': float(data[3])})
+                    
+                    elif current_section == "*MEMBER_LOADS":
+                        self.member_loads.append({'elem_id': int(data[0]), 'type': data[1], 'value': float(data[2])})
+            
+            print(f"Successfully parsed: {len(self.nodes)} nodes and {len(self.elements)} elements.")
+        except Exception as e:
+            print(f"Error parsing file: {e}")
+
+    def get_structural_data(self):
+        """PURPOSE: Formats the parsed data for the FrameAnalyzer engine."""
+        xy = [[n['x'], n['y']] for n in self.nodes]
+        m_props = [[m['A'], m['I'], m['E']] for m in self.materials]
+        con = [[e['start'], e['end'], e['mat']] for e in self.elements]
         
-        self.num_node = len(xy)
-        self.num_elem = len(connectivity)
-        self.e_array = []
-        self.num_eq = 0
-
-    def label_active_dof(self):
-        """Step 1-8: Assigns global equation numbers based on supports."""
-        self.e_array = [[0, 0, 0] for _ in range(self.num_node)]
-        count = 0
-        for i in range(self.num_node):
-            for j in range(3):
-                if self.supports[i][j] == 0:
-                    count += 1
-                    self.e_array[i][j] = count
-        self.num_eq = count
-        return self.num_eq
-
-    def get_element_matrices(self, elem_id):
-        """Step 9-10: Generates k_local and transforms to k_global."""
-        s_node, e_node, mat_id = self.connectivity[elem_id]
-        x1, y1 = self.xy[s_node - 1]
-        x2, y2 = self.xy[e_node - 1]
+        # Supports & Loads array initialization
+        num_n = len(xy)
+        supp_array = [[0, 0, 0] for _ in range(num_n)]
+        for s in self.supports: supp_array[s['node_id']-1] = [s['rx'], s['ry'], s['rz']]
         
-        L = math.sqrt((x2-x1)**2 + (y2-y1)**2)
-        c, s = (x2-x1)/L, (y2-y1)/L
-        A, I, E = self.m_props[mat_id - 1]
-
-        # Standard 2D Frame Stiffness Matrix (Local)
-        k_loc = [[0.0]*6 for _ in range(6)]
-        # ... (Stiffness terms: EA/L, 12EI/L^3 etc. go here) ...
+        load_array = [[0.0, 0.0, 0.0] for _ in range(num_n)]
+        for l in self.nodal_loads: load_array[l['node_id']-1] = [l['fx'], l['fy'], l['mz']]
         
-        # Transformation k_glob = T_transp * k_loc * T
-        # ... (Transformation logic) ...
-        return k_glob, L, c, s
+        return xy, m_props, con, supp_array, load_array
 
-    def assemble_and_solve(self):
-        """Step 11-12: Assemblies K and F, then solves for displacements."""
-        K = BandedSymmetricMatrix(self.num_eq, self.half_bw)
-        F = [0.0] * self.num_eq
-
-        # A. Add Nodal Loads to F
-        for i in range(self.num_node):
-            for j in range(3):
-                eq = self.e_array[i][j]
-                if eq > 0: F[eq-1] += self.nodal_loads[i][j]
-
-        # B. Process Elements (Stiffness + Member Loads)
-        for i in range(self.num_elem):
-            k_glob, L, c, s = self.get_element_matrices(i)
-            # 1. Assemble Stiffness into K
-            # ... (Standard assembly logic using e_array) ...
-
-            # 2. Handle Member Loads (UDL/Point)
-            # Eğer bu eleman üzerinde yük varsa, FEF hesapla ve F'den çıkar
-            fef_glob = self.calculate_fef_global(i, L, c, s)
-            self.assemble_fef_to_global_f(F, i, fef_glob)
-
-        # C. Solve
-        solver = Solver()
-        D = solver.solve_banded_system(K, F)
-        return D
-
-    def calculate_fef_global(self, elem_id, L, c, s):
-        """Calculates Fixed End Forces and transforms them to global."""
-        fef_loc = [0.0] * 6
-        # Member loads listesini gez, bu elemana ait olanları bul ve fef_loc'a ekle
-        # Örn: Vertical UDL için fef_loc[1] = wL/2, fef_loc[2] = wL^2/12 ...
-        # Sonra fef_glob = T_transp * fef_loc
-        return fef_glob
+    def calculate_optimized_bandwidth(self):
+        """Calculates BW dynamically from parsed elements."""
+        max_diff = 0
+        for e in self.elements:
+            diff = abs(e['start'] - e['end'])
+            if diff > max_diff: max_diff = diff
+        return (max_diff + 1) * 3 - 1
