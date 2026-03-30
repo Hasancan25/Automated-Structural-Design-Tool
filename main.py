@@ -3,7 +3,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from src.input_parser import InputParser
 from src.analyzer import FrameAnalyzer
-from src.report_generator import ReportGenerator # 1. Import burada
+from src.report_generator import ReportGenerator
 
 def main():
     input_file = "data/test_design.txt"
