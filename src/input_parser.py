@@ -12,6 +12,7 @@ class InputParser:
         current_section = None
         with open(self.file_path, 'r') as f:
             for line in f:
+                line = line.strip()
                 print(f"Okunan satir: '{line}' | Bölüm: {current_section}")
                 if not line or line.startswith('#'): continue
                 if line.startswith('*'):
