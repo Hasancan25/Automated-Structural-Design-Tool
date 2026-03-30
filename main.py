@@ -6,7 +6,8 @@ from src.analyzer import FrameAnalyzer
 from src.report_generator import ReportGenerator
 
 def main():
-    input_file = "data/test_design.txt"
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    input_file = os.path.join(base_dir, "data", "test_design.txt")
     parser = InputParser(input_file)
     parser.parse_txt()
     
