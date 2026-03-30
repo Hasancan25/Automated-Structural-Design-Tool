@@ -1,0 +1,103 @@
+import math
+from matrix_lib import BandedSymmetricMatrix
+from solver import Solver
+
+class FrameAnalyzer:
+    """
+    PURPOSE: Executes the 13-step Matrix Displacement Method for 2D Frames.
+    It handles dynamic geometries where node and member counts are variable.
+    """
+    def __init__(self, xy, m_props, connectivity, supports, loads, half_bw):
+        """
+        INPUTS: 
+            xy (list): Nodal coordinates.
+            m_props (list): Material properties [A, I, E].
+            connectivity (list): Element mapping [Start, End, MatID].
+            supports (list): Boundary conditions.
+            loads (list): Applied nodal forces.
+            half_bw (int): Calculated optimal bandwidth.
+        """
+        self.xy = xy
+        self.m_props = m_props
+        self.connectivity = connectivity
+        self.supports = supports
+        self.loads = loads
+        self.half_bw = half_bw
+        
+        self.num_node = len(xy)
+        self.num_elem = len(connectivity)
+        self.e_array = [] # DOF mapping
+        self.num_eq = 0   # Total active equations
+
+    def label_active_dof(self):
+        """
+        PURPOSE: Steps 1-8: Automatically assigns global equation numbers.
+        OUTPUTS: self.num_eq (int), self.e_array (list)
+        """
+        self.e_array = [[0, 0, 0] for _ in range(self.num_node)]
+        count = 0
+        for i in range(self.num_node):
+            for j in range(3): # 3 DOFs per node
+                if self.supports[i][j] == 0: # If free
+                    count += 1
+                    self.e_array[i][j] = count
+        self.num_eq = count
+        return self.num_eq
+
+    def get_element_stiffness_global(self, elem_id):
+        """
+        PURPOSE: Steps 9-10: Computes kglobal = [R]^T * [k_local] * [R].
+        INPUTS: elem_id (int)
+        OUTPUTS: k_global (6x6 matrix as list of lists)
+        """
+        # 1. Get Geometry
+        start_node, end_node, mat_id = self.connectivity[elem_id]
+        x1, y1 = self.xy[start_node - 1]
+        x2, y2 = self.xy[end_node - 1]
+        L = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+        cos, sin = (x2 - x1) / L, (y2 - y1) / L
+        
+        # 2. Get Material Properties
+        A, I, E = self.m_props[mat_id - 1]
+        
+        # 3. Form k_local (Simplified logic for 2D Frame)
+        # (Burada standart 6x6 yerel rijitlik matrisi formülleri uygulanır)
+        # ... [k_local hesaplamaları] ...
+        
+        # 4. Form Rotation Matrix [R] and Transform
+        # k_global = R_transpose * k_local * R
+        # ... [Transformasyon işlemleri] ...
+        
+        return k_global, L, cos, sin
+
+    def assemble_global_matrix(self):
+        """
+        PURPOSE: Step 11: Assembles element matrices into the Banded Symmetric system.
+        OUTPUTS: K_global (BandedSymmetricMatrix object)
+        """
+        K = BandedSymmetricMatrix(self.num_eq, self.half_bw)
+        
+        for i in range(self.num_elem):
+            k_elem_global, _, _, _ = self.get_element_stiffness_global(i)
+            # Düğüm numaralarını al ve e_array üzerinden global adresleri bul
+            # K.assemble(global_i, global_j, value) fonksiyonunu çağır
+            
+        return K
+
+    def solve_displacements(self, K):
+        """
+        PURPOSE: Step 12: Solves K * D = F.
+        OUTPUTS: D (list of global displacements)
+        """
+        # 1. Construct load vector F based on e_array
+        F = [0.0] * self.num_eq
+        for i in range(self.num_node):
+            for j in range(3):
+                eq_num = self.e_array[i][j]
+                if eq_num > 0:
+                    F[eq_num - 1] = self.loads[i][j]
+        
+        # 2. Solve using Gaussian Elimination
+        solver = Solver()
+        D = solver.solve_banded_system(K, F)
+        return D
