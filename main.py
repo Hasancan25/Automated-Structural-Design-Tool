@@ -1,32 +1,47 @@
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+# 1. Klasör yollarını otomatik ayarla (Nerede olursan ol, dosyanı bulur)
+base_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(base_dir)
+
 from src.input_parser import InputParser
 from src.analyzer import FrameAnalyzer
 from src.report_generator import ReportGenerator
 
 def main():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+    # 2. Giriş ve Çıkış yollarını base_dir ile birleştir
     input_file = os.path.join(base_dir, "data", "test_design.txt")
+    report_file = os.path.join(base_dir, "data", "output_report.txt")
+    
+    # Klasör kontrolü (Eğer data klasörü yoksa otomatik oluşturur)
+    data_folder = os.path.join(base_dir, "data")
+    if not os.path.exists(data_folder):
+        os.makedirs(data_folder)
+
+    # ANALİZ SÜRECİ
+    print("--- Analiz Basliyor ---")
     parser = InputParser(input_file)
     parser.parse_txt()
     
-    # Verileri alıyoruz
     xy, m_props, con, supports, loads = parser.get_structural_data()
     bw = parser.calculate_optimized_bandwidth()
     
     analyzer = FrameAnalyzer(xy, m_props, con, supports, loads, parser.member_loads, bw)
     analyzer.label_active_dof()
     
-    # ÇÖZÜMÜ BURADA YAPIYORUZ
+    print("Sistem cozuluyor...")
     displacements = analyzer.solve() 
     
-    # 2. Raporu Çözümden SONRA oluşturuyoruz
-    report_file = "data/output_report.txt"
+    # SONUÇLARI YAZDIRMA
+    print("Rapor olusturuluyor...")
     reporter = ReportGenerator(report_file)
     reporter.write_report(len(xy), len(con), displacements, input_file)
     
-    print("Analiz bitti ve rapor oluşturuldu!")
+    print("\n" + "="*40)
+    print(" BASARI: Analiz bitti ve rapor kaydedildi!")
+    print(f" Raporun yeri: {report_file}")
+    print("="*40)
 
 if __name__ == "__main__":
     main()
