@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from src.input_parser import InputParser
 from src.analyzer import FrameAnalyzer
 from src.report_generator import ReportGenerator # 1. Import burada
