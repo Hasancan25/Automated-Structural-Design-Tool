@@ -16,6 +16,7 @@ class FrameAnalyzer:
         self.e_array = np.zeros((self.num_node, 3), dtype=int)
 
     def label_active_dof(self):
+        """Serbestlik derecelerini etiketler ve toplam denklem sayısını döner."""
         count = 0
         support_dict = {}
         for s in self.supports:
@@ -40,6 +41,7 @@ class FrameAnalyzer:
         return count
 
     def get_k_global(self, i_elem):
+        """Eleman lokal matrisini hesaplar ve global koordinatlara çevirir."""
         s_n, e_n, m_id = self.con[i_elem]
         m_id_val = int(float(str(m_id).replace(',', '').strip()))
         prop_list = self.m_props[m_id_val - 1]
@@ -55,6 +57,7 @@ class FrameAnalyzer:
         L = np.sqrt((x2-x1)**2 + (y2-y1)**2)
         c, s = (x2-x1)/L, (y2-y1)/L
 
+        # Lokal Rijitlik Matrisi
         k_loc = np.array([
             [E*A/L, 0, 0, -E*A/L, 0, 0],
             [0, 12*E*I/L**3, 6*E*I/L**2, 0, -12*E*I/L**3, 6*E*I/L**2],
@@ -67,47 +70,38 @@ class FrameAnalyzer:
         return T.T @ k_loc @ T
 
     def solve(self):
-        print("\n--- ANALIZ VE YUK KONTROLU ---")
+        print("\n--- ANALİZ BAŞLADI ---")
         num_eq = self.label_active_dof()
-        print(f"Aktif Denklemler: {num_eq}")
-        
         K_obj = SparseStiffnessMatrix(num_eq)
         F = np.zeros(num_eq)
 
-        # Hata Yakalama ve Debug: Yükleri neden işlemiyor?
-        processed_loads = 0
-        skipped_zeros = 0
-        if self.nodal_loads:
-            print(f"Ilk Yuk Satiri Örneği: {self.nodal_loads[0]}")
-            
+        # --- AGRESİF YÜK OKUMA VE MONTAJ ---
+        load_count = 0
         for l in self.nodal_loads:
             try:
-                # Satırı temizle ve ID al
-                node_id = int(float(str(l[0]).replace(',', '').strip()))
+                # Satırın ilk elemanı düğüm ID'si
+                n_id_str = str(l[0]).replace(',', '').strip()
+                n_id = int(float(n_id_str))
                 
-                # Sadece yükün olduğu değerleri tara
-                for j in range(len(l)-1):
-                    if j < 3: # X, Y, Moment
-                        val = float(str(l[j+1]).replace(',', '').strip())
-                        if val != 0:
-                            if node_id <= self.num_node:
-                                eq = self.e_array[node_id-1][j]
+                # Eğer satırda yük değerleri varsa (ID + en az 1 yük değeri)
+                if len(l) >= 2:
+                    for j in range(len(l) - 1):
+                        if j < 3: # X, Y ve Moment (maksimum 3 serbestlik)
+                            val_str = str(l[j+1]).replace(',', '').strip()
+                            val = float(val_str)
+                            
+                            if val != 0:
+                                eq = self.e_array[n_id-1][j]
                                 if eq > 0:
                                     F[eq-1] += val
-                                    processed_loads += 1
-                            else:
-                                print(f"HATA: Düğüm ID ({node_id}) toplam düğümden fazla!")
-                        else:
-                            skipped_zeros += 1
-            except Exception as e:
-                # print(f"Satir Okuma Hatasi: {e}") # Çok satır varsa terminali kirletmesin
+                                    load_count += 1
+            except: 
                 continue
+        
+        print(f"--- KRITIK KONTROL: Sisteme {load_count} adet AKTIF yuk girdi. ---")
+        print(f"--- MAX KUVVET: {np.max(np.abs(F)) if len(F)>0 else 0} N ---")
 
-        print(f"Sisteme İşlenen Aktif Yük Sayısı: {processed_loads}")
-        print(f"Atlanan SIFIR Değerli Yük Sayısı: {skipped_zeros}")
-        print(f"F Vektörü Maksimum Kuvvet: {np.max(np.abs(F)) if len(F)>0 else 0} N")
-
-        # Eleman Montajı
+        # Eleman Montajı (COO Formatı)
         print(f"Adım 3: {self.num_elem} eleman monte ediliyor...")
         for i in range(self.num_elem):
             k_g = self.get_k_global(i)
@@ -119,11 +113,8 @@ class FrameAnalyzer:
                     if dofs[r] > 0 and dofs[c] > 0:
                         K_obj.assemble(dofs[r], dofs[c], k_g[r][c])
 
+        # Matrisi finalize et ve çözücüye gönder
         K_sparse = K_obj.finalize()
+        print("Adım 4: Iterative Solver (CG) başlatılıyor...")
         solver = Solver()
-        displacements = solver.solve_sparse_system(K_sparse, F)
-        
-        if len(displacements) > 0:
-            print(f"MAKSIMUM DEPLASMAN: {np.max(np.abs(displacements))} m")
-            
-        return displacements
+        return solver.solve_sparse_system(K_sparse, F)
