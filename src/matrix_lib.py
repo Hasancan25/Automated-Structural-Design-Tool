@@ -1,11 +1,12 @@
-class BandedSymmetricMatrix:
-    def __init__(self, size, half_bandwidth):
+import numpy as np
+from scipy.sparse import lil_matrix
+
+class SparseStiffnessMatrix:
+    def __init__(self, size):
         self.size = size
-        self.hbw = half_bandwidth
-        self.data = [[0.0] * (half_bandwidth + 1) for _ in range(size)]
+        # LIL formatı kurulum (assemble) sırasında hızlıdır
+        self.matrix = lil_matrix((size, size))
 
     def assemble(self, row, col, value):
-        if row > col: row, col = col, row
-        bw_idx = col - row
-        if bw_idx <= self.hbw:
-            self.data[row-1][bw_idx] += value
+        # Python 1-tabanlı indexten 0-tabanlıya geçiş
+        self.matrix[row-1, col-1] += value
