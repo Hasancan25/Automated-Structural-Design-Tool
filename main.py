@@ -1,46 +1,56 @@
-import sys
 import os
-
-# 1. Klasör yollarını otomatik ayarla (Nerede olursan ol, dosyanı bulur)
-base_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(base_dir)
-
+import time
 from src.input_parser import InputParser
 from src.analyzer import FrameAnalyzer
-from src.report_generator import ReportGenerator
 
 def main():
-    input_file = os.path.join(base_dir, "data", "large_design.txt")
-    report_file = os.path.join(base_dir, "data", "output_report.txt")
+    # Dosya yollarını belirle
+    input_file = os.path.join("data", "large_design.txt")
+    output_file = os.path.join("data", "output_report.txt")
     
-    # Klasör kontrolü (Eğer data klasörü yoksa otomatik oluşturur)
-    data_folder = os.path.join(base_dir, "data")
-    if not os.path.exists(data_folder):
-        os.makedirs(data_folder)
+    if not os.path.exists(input_file):
+        print(f"HATA: {input_file} bulunamadı! Önce generate_data.py çalıştırılmalı.")
+        return
 
-    # ANALİZ SÜRECİ
-    print("--- Analiz Basliyor ---")
+    print("--- ODTU Structural Analysis Tool (Sparse Engine) ---")
+    start_total = time.time()
+
+    # 1. DOSYAYI OKU (Parser)
+    print("Adım 1: Veri seti okunuyor...")
     parser = InputParser(input_file)
     parser.parse_txt()
     
+    # Yeni InputParser fonksiyonumuzu çağırıyoruz
     xy, m_props, con, supports, loads = parser.get_structural_data()
-    bw = parser.calculate_optimized_bandwidth()
+
+    # 2. ANALİZİ BAŞLAT (Analyzer)
+    # Artık 'bw' (bandwidth) göndermemize gerek yok!
+    analyzer = FrameAnalyzer(xy, m_props, con, supports, loads, [])
     
-    analyzer = FrameAnalyzer(xy, m_props, con, supports, loads, parser.member_loads, bw)
-    analyzer.label_active_dof()
-    
-    print("Sistem cozuluyor...")
-    displacements = analyzer.solve() 
-    
-    # SONUÇLARI YAZDIRMA
-    print("Rapor olusturuluyor...")
-    reporter = ReportGenerator(report_file)
-    reporter.write_report(len(xy), len(con), displacements, input_file)
-    
-    print("\n" + "="*40)
-    print(" BASARI: Analiz bitti ve rapor kaydedildi!")
-    print(f" Raporun yeri: {report_file}")
-    print("="*40)
+    print(f"Adım 2: Analiz motoru hazırlandı. ({len(xy)} Düğüm, {len(con)} Eleman)")
+    displacements = analyzer.solve()
+
+    # 3. RAPOR OLUŞTUR (Report)
+    print("Adım 5: Rapor yazdırılıyor...")
+    with open(output_file, "w") as f:
+        f.write("="*60 + "\n")
+        f.write("        STRUCTURAL ANALYSIS REPORT - 2D FRAME\n")
+        f.write(f"        Date: {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write("="*60 + "\n\n")
+        f.write(f"Source Input File: {os.path.abspath(input_file)}\n")
+        f.write(f"Nodes Detected: {len(xy)}\n")
+        f.write(f"Elements Detected: {len(con)}\n")
+        f.write("-" * 30 + "\n\n")
+        f.write("NODAL DISPLACEMENTS\n")
+        f.write(f"{'DOF No':<10} | {'Displacement (m or rad)':<25}\n")
+        f.write("-" * 40 + "\n")
+        
+        for i, disp in enumerate(displacements):
+            f.write(f"{i+1:<10} | {disp: .8e}\n")
+
+    end_total = time.time()
+    print(f"\n[BASARI] Analiz ve raporlama {end_total - start_total:.2f} saniyede tamamlandi.")
+    print(f"Sonuclar: {output_file}")
 
 if __name__ == "__main__":
     main()
