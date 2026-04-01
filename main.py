@@ -10,8 +10,7 @@ from src.analyzer import FrameAnalyzer
 from src.report_generator import ReportGenerator
 
 def main():
-    # 2. Giriş ve Çıkış yollarını base_dir ile birleştir
-    input_file = os.path.join(base_dir, "data", "test_design.txt")
+    input_file = os.path.join(base_dir, "data", "large_design.txt")
     report_file = os.path.join(base_dir, "data", "output_report.txt")
     
     # Klasör kontrolü (Eğer data klasörü yoksa otomatik oluşturur)
