@@ -16,7 +16,7 @@ class FrameAnalyzer:
         self.e_array = np.zeros((self.num_node, 3), dtype=int)
 
     def label_active_dof(self):
-        """Serbestlik derecelerini güvenli bir şekilde etiketler."""
+        """Mesnetleri ve serbestlik derecelerini güvenli bir şekilde etiketler."""
         count = 0
         support_dict = {}
         for s in self.supports:
@@ -45,18 +45,14 @@ class FrameAnalyzer:
         """Eleman rijitlik matrisini E, A, I kontrolü yaparak hesaplar."""
         s_n, e_n, m_id = self.con[i_elem]
         
-        # --- HATA DÜZELTME BÖLGESİ ---
+        # Akıllı Malzeme Verisi Okuma (Unpack hatasını çözen kısım)
         prop_list = self.m_props[int(float(m_id))-1]
-        
         if len(prop_list) >= 4:
-            # Eğer veri formatı: [ID, E, A, I] ise
             E, A, I = [float(x) for x in prop_list[1:4]]
         elif len(prop_list) == 3:
-            # Eğer veri formatı: [E, A, I] ise
             E, A, I = [float(x) for x in prop_list]
         else:
-            raise ValueError(f"HATA: Eleman {i_elem+1} için malzeme verisi eksik! Gelen: {prop_list}")
-        # ----------------------------
+            raise ValueError(f"Eleman {i_elem+1} malzeme verisi hatali!")
 
         x1, y1 = self.xy[int(float(s_n))-1]
         x2, y2 = self.xy[int(float(e_n))-1]
@@ -64,7 +60,7 @@ class FrameAnalyzer:
         c = (x2-x1)/L
         s = (y2-y1)/L
 
-        # Lokal Rijitlik Matrisi (6x6)
+        # Lokal matris kurulumu
         k_loc = np.array([
             [E*A/L, 0, 0, -E*A/L, 0, 0],
             [0, 12*E*I/L**3, 6*E*I/L**2, 0, -12*E*I/L**3, 6*E*I/L**2],
@@ -74,7 +70,7 @@ class FrameAnalyzer:
             [0, 6*E*I/L**2, 2*E*I/L, 0, 6*E*I/L**2, 4*E*I/L]
         ])
 
-        # Dönüşüm Matrisi
+        # Dönüşüm matrisi
         T = np.array([
             [c, s, 0, 0, 0, 0],
             [-s, c, 0, 0, 0, 0],
@@ -87,42 +83,32 @@ class FrameAnalyzer:
         return T.T @ k_loc @ T
 
     def solve(self):
-        print("Adım 1: Serbestlik dereceleri etiketleniyor...")
         num_eq = self.label_active_dof()
-        
-        print(f"Adım 2: Global Matris Kuruluyor ({num_eq} denklem)...")
+        print(f"Global Matris Kuruluyor ({num_eq} denklem)...")
         K = SparseStiffnessMatrix(num_eq)
         F = np.zeros(num_eq)
 
         # Nodal Yüklerin Montajı
         for l in self.nodal_loads:
             if len(l) >= 4:
-                try:
-                    node_id = int(float(l[0]))
-                    for j in range(3):
-                        eq = self.e_array[node_id-1][j]
-                        if eq > 0:
-                            F[eq-1] += float(l[j+1])
-                except (ValueError, IndexError):
-                    continue
+                node_id = int(float(l[0]))
+                for j in range(3):
+                    eq = self.e_array[node_id-1][j]
+                    if eq > 0:
+                        F[eq-1] += float(l[j+1])
 
-        # Eleman Matrislerinin Montajı
-        print(f"Adım 3: {self.num_elem} eleman matrise yerleştiriliyor...")
+        # Elemanların Matrise Yerleştirilmesi
+        print(f"{self.num_elem} eleman monte ediliyor...")
         for i in range(self.num_elem):
-            try:
-                k_g = self.get_k_global(i)
-                s_n, e_n, _ = self.con[i]
-                dofs = list(self.e_array[int(float(s_n))-1]) + list(self.e_array[int(float(e_n))-1])
-                
-                for r in range(6):
-                    for c in range(6):
-                        if dofs[r] > 0 and dofs[c] > 0:
-                            K.assemble(dofs[r], dofs[c], k_g[r][c])
-            except Exception as e:
-                print(f"Uyarı: Eleman {i+1} işlenirken hata oluştu: {e}")
-                continue
+            k_g = self.get_k_global(i)
+            s_n, e_n, _ = self.con[i]
+            dofs = list(self.e_array[int(float(s_n))-1]) + list(self.e_array[int(float(e_n))-1])
+            
+            for r in range(6):
+                for c in range(6):
+                    if dofs[r] > 0 and dofs[c] > 0:
+                        K.assemble(dofs[r], dofs[c], k_g[r][c])
 
-        print("Adım 4: Iterative Solver (CG) başlatılıyor...")
+        # Çözücüye Gönder
         solver = Solver()
-        displacements = solver.solve_sparse_system(K.matrix, F)
-        return displacements
+        return solver.solve_sparse_system(K.matrix, F)
