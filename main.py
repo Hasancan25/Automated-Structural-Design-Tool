@@ -1,56 +1,54 @@
-import os
-import time
-from src.input_parser import InputParser
-from src.analyzer import FrameAnalyzer
+import matplotlib.pyplot as plt
+import numpy as np
 
-def main():
-    # Dosya yollarını belirle
-    input_file = os.path.join("data", "large_design.txt")
-    output_file = os.path.join("data", "output_report.txt")
+def plot_deflection(xy, con, displacements, scale_factor=500):
+    """
+    xy: Orijinal koordinatlar [[x, y], ...]
+    con: Eleman baglantilari [[start, end, mat_id], ...]
+    displacements: Cozulmus deplasmanlar [u1, v1, theta1, u2, v2, ...]
+    scale_factor: Deplasmanlari gormek icin buyutme katsayisi
+    """
+    print(f"Grafik ciziliyor (Olcek: x{scale_factor})...")
+    plt.figure(figsize=(10, 12))
     
-    if not os.path.exists(input_file):
-        print(f"HATA: {input_file} bulunamadı! Önce generate_data.py çalıştırılmalı.")
-        return
-
-    print("--- ODTU Structural Analysis Tool (Sparse Engine) ---")
-    start_total = time.time()
-
-    # 1. DOSYAYI OKU (Parser)
-    print("Adım 1: Veri seti okunuyor...")
-    parser = InputParser(input_file)
-    parser.parse_txt()
+    # 1. Orijinal Koordinatlari Hazırla
+    xy = np.array(xy)
     
-    # Yeni InputParser fonksiyonumuzu çağırıyoruz
-    xy, m_props, con, supports, loads = parser.get_structural_data()
-
-    # 2. ANALİZİ BAŞLAT (Analyzer)
-    # Artık 'bw' (bandwidth) göndermemize gerek yok!
-    analyzer = FrameAnalyzer(xy, m_props, con, supports, loads, [])
+    # 2. Deforme Olmus Koordinatlari Hesapla
+    # Her dugumun 3 serbestlik derecesi var (u, v, theta)
+    num_node = len(xy)
+    xy_def = np.zeros_like(xy)
     
-    print(f"Adım 2: Analiz motoru hazırlandı. ({len(xy)} Düğüm, {len(con)} Eleman)")
-    displacements = analyzer.solve()
-
-    # 3. RAPOR OLUŞTUR (Report)
-    print("Adım 5: Rapor yazdırılıyor...")
-    with open(output_file, "w") as f:
-        f.write("="*60 + "\n")
-        f.write("        STRUCTURAL ANALYSIS REPORT - 2D FRAME\n")
-        f.write(f"        Date: {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
-        f.write("="*60 + "\n\n")
-        f.write(f"Source Input File: {os.path.abspath(input_file)}\n")
-        f.write(f"Nodes Detected: {len(xy)}\n")
-        f.write(f"Elements Detected: {len(con)}\n")
-        f.write("-" * 30 + "\n\n")
-        f.write("NODAL DISPLACEMENTS\n")
-        f.write(f"{'DOF No':<10} | {'Displacement (m or rad)':<25}\n")
-        f.write("-" * 40 + "\n")
+    for i in range(num_node):
+        # u (x yonu) ve v (y yonu) deplasmanlarini al (theta ihmal edilir)
+        u = displacements[i*3]
+        v = displacements[i*3 + 1]
         
-        for i, disp in enumerate(displacements):
-            f.write(f"{i+1:<10} | {disp: .8e}\n")
+        xy_def[i, 0] = xy[i, 0] + u * scale_factor
+        xy_def[i, 1] = xy[i, 1] + v * scale_factor
 
-    end_total = time.time()
-    print(f"\n[BASARI] Analiz ve raporlama {end_total - start_total:.2f} saniyede tamamlandi.")
-    print(f"Sonuclar: {output_file}")
+    # 3. Elemanlari Ciz (Hiz icin sadece belirli bir kismi veya tumunu secebilirsin)
+    # 200.000 elemani cizmek zaman alabilir, sadece kolon ve kirisleri donguyle ciziyoruz
+    for elem in con:
+        s_idx = int(elem[0]) - 1
+        e_idx = int(elem[1]) - 1
+        
+        # Orijinal Yapi (Gri ve Kesikli)
+        plt.plot([xy[s_idx, 0], xy[e_idx, 0]], 
+                 [xy[s_idx, 1], xy[e_idx, 1]], 
+                 'gray', linestyle='--', linewidth=0.5, alpha=0.3)
+        
+        # Deforme Olmus Yapi (Mavi ve Net)
+        plt.plot([xy_def[s_idx, 0], xy_def[e_idx, 0]], 
+                 [xy_def[s_idx, 1], xy_def[e_idx, 1]], 
+                 'blue', linewidth=1)
 
-if __name__ == "__main__":
-    main()
+    plt.title(f"Bina Deformasyon Grafigi (Olcek: x{scale_factor})")
+    plt.xlabel("X Koordinati (m)")
+    plt.ylabel("Y Koordinati (m)")
+    plt.axis('equal')
+    plt.grid(True, linestyle=':', alpha=0.6)
+    
+    print("Grafik kaydediliyor: data/deflection_plot.png")
+    plt.savefig("data/deflection_plot.png", dpi=300)
+    plt.show()
