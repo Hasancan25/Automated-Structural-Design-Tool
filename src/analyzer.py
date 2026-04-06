@@ -25,7 +25,7 @@ class FrameAnalyzer:
         print("Adim 3: Elemanlar sisteme monte ediliyor...")
         for i, elem in enumerate(self.con):
             n1, n2, mat_id = int(elem[0])-1, int(elem[1])-1, int(elem[2])-1
-            E, A, I = self.m_props[mat_id]
+            E, A, I = self.m_props[mat_id][:3]
             
             # Koordinatlar ve Boy
             x1, y1 = self.xy[n1]
