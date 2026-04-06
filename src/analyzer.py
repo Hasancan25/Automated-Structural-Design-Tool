@@ -103,17 +103,22 @@ class FrameAnalyzer:
             else:
                 print(f"[UYARI] Gecersiz Mesnet Dugum ID: {node_id}. Atlandi.")
 
-        # 5. Cozucu (Solver) - KRITIK AYARLAR BURADA
+# 5. Cozucu (Solver) - GÜNCEL VERSİYON
         print("\n--- Iterative Solver (CG) Baslatildi ---")
         K_sparse = K_global.tocsr() # Isleme hizli girmek icin CSR formatina gec
         
         start_time = time.time()
+        
+        # SciPy 1.11+ sürümleri için 'tol' yerine 'rtol' kullanılır.
+        # 'atol' ise mutlak hata payını belirler, ikisini de eklemek en güvenlisidir.
         displacements, info = cg(
             K_sparse, 
             F_global, 
-            rtol=1e-10,       # Hassasiyet artirildi
-            max_iter=50000    # Inatci mod acildi
+            rtol=1e-10,       # 'tol' olan yer 'rtol' yapıldı
+            atol=1e-10,       # Mutlak tolerans da eklendi
+            max_iter=50000    # 200 katlı bina için inatçı mod
         )
+        
         end_time = time.time()
 
         if info == 0:
