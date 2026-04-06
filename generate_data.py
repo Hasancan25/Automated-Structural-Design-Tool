@@ -1,50 +1,65 @@
 import os
 
-def generate_super_clean_data():
-    folder = "data"
-    if not os.path.exists(folder): os.makedirs(folder)
-    file_path = os.path.join(folder, "large_design.txt")
+def generate_skyscraper_data():
+    # Klasör kontrolü
+    if not os.path.exists('data'):
+        os.makedirs('data')
+        
+    filename = "data/large_design.txt"
+    num_stories = 200  # 200 Katlı Gökdelen
+    nodes_per_floor = 500 # Toplam 100.500 düğüm
     
-    stories, nodes_per_floor = 200, 500
-    h, w = 3.5, 5.0
+    print(f"--- {num_stories} katli devasa veri seti uretiliyor... ---")
     
-    print("--- Virgulsüz Temiz Veri Olusturuluyor ---")
-    with open(file_path, 'w') as f:
-        # 1. MALZEME (Sadece bosluk)
-        f.write("*MATERIALS\n1 30000000000.0 0.25 0.005\n\n")
-
-        # 2. DÜĞÜMLER
-        f.write("*NODES\n")
+    with open(filename, "w") as f:
+        # 1. Malzeme Özellikleri: [E, A, I]
+        # Betonarme/Çelik karışımı bir rijitlik (Örn: E=30GPa, A=1m2, I=0.1m4)
+        f.write("MATERIALS\n")
+        f.write("1 3.0e10 1.0 0.1\n")
+        
+        # 2. Düğümler (Nodes): [ID, X, Y]
+        f.write("\nNODES\n")
         node_id = 1
-        for s in range(stories + 1):
+        for floor in range(num_stories + 1):
+            y = floor * 3.5  # Kat yüksekliği 3.5m
             for n in range(nodes_per_floor):
-                f.write(f"{node_id} {n*w:.2f} {s*h:.2f}\n")
+                x = n * 5.0 # Açıklık 5m
+                f.write(f"{node_id} {x} {y}\n")
                 node_id += 1
         
-        # 3. ELEMANLAR
-        f.write("\n*ELEMENTS\n")
-        elem_id = 1
-        for s in range(stories): # Kolonlar
-            for n in range(nodes_per_floor):
-                f.write(f"{elem_id} {s*nodes_per_floor+n+1} {(s+1)*nodes_per_floor+n+1} 1\n")
-                elem_id += 1
-        for s in range(1, stories + 1): # Kirisler
+        total_nodes = node_id - 1
+        
+        # 3. Elemanlar (Elements): [ID1, ID2, MatID]
+        f.write("\nELEMENTS\n")
+        # Kirişler ve Kolonlar (Basit bir çerçeve sistemi)
+        for floor in range(num_stories + 1):
+            start_node = floor * nodes_per_floor + 1
             for n in range(nodes_per_floor - 1):
-                f.write(f"{elem_id} {s*nodes_per_floor+n+1} {s*nodes_per_floor+n+2} 1\n")
-                elem_id += 1
+                # Kirişler
+                f.write(f"{start_node + n} {start_node + n + 1} 1\n")
+            
+            if floor < num_stories:
+                for n in range(nodes_per_floor):
+                    # Kolonlar
+                    f.write(f"{start_node + n} {start_node + n + nodes_per_floor} 1\n")
+        
+        # 4. Mesnetler (Supports): [NodeID, DOF, Value]
+        f.write("\nSUPPORTS\n")
+        # Zemin kattaki (Y=0) tüm düğümler ankastre
+        for n in range(nodes_per_floor):
+            f.write(f"{n + 1} 1 0.0\n") # X sabit
+            f.write(f"{n + 1} 2 0.0\n") # Y sabit
+            f.write(f"{n + 1} 3 0.0\n") # Dönme sabit
+            
+        # 5. Yükler (Loads): [NodeID, DOF, Force]
+        f.write("\nLOADS\n")
+        # Tüm binaya rüzgar yükü (X yönünde)
+        for node in range(nodes_per_floor + 1, total_nodes + 1):
+            # En üst katlara daha fazla yük (Rüzgar profili)
+            force = 5000.0  # 5 kN
+            f.write(f"{node} 1 {force}\n")
 
-        # 4. MESNETLER
-        f.write("\n*SUPPORTS\n")
-        for i in range(1, nodes_per_floor + 1):
-            f.write(f"{i} 1 1 1\n")
-
-        # 5. YÜKLER (BASLIGI DEGISTIRDIK - PARSER GARANTISI)
-        f.write("\n*NODAL_LOADS\n")
-        top_start = stories * nodes_per_floor + 1
-        for node in range(top_start, top_start + nodes_per_floor):
-            f.write(f"{node} 10000000.0 0.0 0.0\n")
-
-    print(f"Bitti! {file_path} hazir.")
+    print(f"Bitti! {filename} hazir. Toplam Dugum: {total_nodes}")
 
 if __name__ == "__main__":
-    generate_super_clean_data()
+    generate_skyscraper_data()
