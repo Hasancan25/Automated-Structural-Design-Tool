@@ -85,14 +85,23 @@ class FrameAnalyzer:
                 print(f"[HATA] Yukleme sirasinda beklenmedik veri: {load_entry}")
                 continue
             
-        # 4. Sinir Sartlarini Uygula (Penalty Method)
-        # Mesnetli noktalara cok buyuk bir rijitlik ekleyerek hareketlerini sifirliyoruz.
-        print("Adim 4: Sinir sartlari (Mesnetler) isleniyor...")
+# 4. Sinir Sartlarini Uygula (Penalty Method)
+        print("Adim 6: Sinir sartlari (Mesnetler) isleniyor...")
         penalty = 1e18
-        for node_id, dof, val in self.supports:
+        for support_entry in self.supports:
+            # KRİTİK DÜZELTME: Sadece ilk 3 degeri al (node_id, dof, val)
+            # Bu sayede TXT dosyasindaki fazla veriler hataya sebep olmaz.
+            node_id, dof, val = support_entry[:3]
+            
+            # İndeksi hesapla
             idx = (int(node_id)-1)*3 + (int(dof)-1)
-            K_global[idx, idx] += penalty
-            F_global[idx] += val * penalty
+            
+            # GÜVENLİK KONTROLÜ: İndeks sınır içindeyse mesnedi işle
+            if 0 <= idx < len(F_global):
+                K_global[idx, idx] += penalty
+                F_global[idx] += val * penalty
+            else:
+                print(f"[UYARI] Gecersiz Mesnet Dugum ID: {node_id}. Atlandi.")
 
         # 5. Cozucu (Solver) - KRITIK AYARLAR BURADA
         print("\n--- Iterative Solver (CG) Baslatildi ---")
