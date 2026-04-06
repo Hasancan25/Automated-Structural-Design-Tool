@@ -64,26 +64,30 @@ class FrameAnalyzer:
                 for col in range(6):
                     K_global[dofs[r], dofs[col]] += K_e[r, col]
         
-# 3. Yukleri Uygula (Korumalı Versiyon)
+# 3. Yukleri Uygula (ESLESTIRMELI VE GUVENLI)
         print("Adim 5: Yukler sisteme dahil ediliyor...")
-        for i, load_entry in enumerate(self.loads):
+        
+        # Dosyadaki ID'ler ile Python indekslerini baglamak icin bir harita (map) kuruyoruz
+        node_map = {int(self.xy[i, 0] if self.xy.shape[1] > 2 else i+1): i for i in range(self.num_nodes)}
+        # Eger koordinat dosyasinda ID yoksa, varsayilan olarak 1'den baslayan sirayi kullanir:
+        if not node_map:
+            node_map = {i+1: i for i in range(self.num_nodes)}
+
+        applied_load_count = 0
+        for load_entry in self.loads:
             try:
-                # Veriyi al
                 node_id, dof, force = load_entry[:3]
+                target_node_id = int(float(node_id))
                 
-                # İndeksi hesapla
-                idx = (int(node_id)-1)*3 + (int(dof)-1)
-                
-                # GÜVENLİK KONTROLÜ: Eğer indeks sınırı aşıyorsa o yükü atla ve uyar
-                if idx >= len(F_global) or idx < 0:
-                    print(f"[UYARI] Gecersiz Dugum ID (Satir {i}): {node_id}. Bu yuk atlandi.")
-                    continue
-                    
-                F_global[idx] += force
-                
-            except Exception as e:
-                print(f"[HATA] Yukleme sirasinda beklenmedik veri: {load_entry}")
+                if target_node_id in node_map:
+                    node_idx = node_map[target_node_id]
+                    idx = node_idx * 3 + (int(dof) - 1)
+                    F_global[idx] += force
+                    applied_load_count += 1
+            except:
                 continue
+
+        print(f"[BILGI] Toplam {applied_load_count} adet yuk sisteme basariyla asildi.")
             
 # 4. Sinir Sartlarini Uygula (Penalty Method)
         print("Adim 6: Sinir sartlari (Mesnetler) isleniyor...")
