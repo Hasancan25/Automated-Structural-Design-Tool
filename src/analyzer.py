@@ -40,15 +40,37 @@ class FrameAnalyzer:
             for r in range(6):
                 for col in range(6): K_global[dofs[r], dofs[col]] += K_e[r, col]
 
+# 2. Yükleri ve Mesnetleri Akıllıca As (KORUMALI)
         print("Adim 2: Yukler ve Mesnetler asiliyor...")
         applied_loads = 0
         for l in self.loads:
-            nid = int(l[0])
-            if nid in self.node_map:
-                F_global[self.node_map[nid]*3 + (int(l[1])-1)] += l[2]
-                applied_loads += 1
-        print(f"-> Basariyla asilan yuk: {applied_loads}")
+            try:
+                # Sütunlarda kaç veri olursa olsun temizle
+                vals = [x for x in l if not np.isnan(x)]
+                if len(vals) < 3: continue
+                
+                # MÜHENDİS MANTIĞI: 
+                # 1. Genelde en büyük sayı (10^6 gibi) 'Kuvvet'tir.
+                # 2. 1, 2 veya 3 olan sayı 'Yön'dür (DOF).
+                # 3. Geri kalan sayı 'Düğüm ID'dir.
+                
+                force = max(vals)
+                dof_list = [v for v in vals if v in [1.0, 2.0, 3.0]]
+                dof = int(dof_list[0]) if dof_list else 1
+                
+                # ID'yi bulmak için kalan sayıyı al
+                remaining = [v for v in vals if v != force and v != dof]
+                nid = int(remaining[0]) if remaining else int(vals[0])
 
+                if nid in self.node_map:
+                    idx = self.node_map[nid] * 3 + (dof - 1)
+                    if 0 <= idx < self.num_dof:
+                        F_global[idx] += force
+                        applied_loads += 1
+            except Exception as e:
+                continue
+                
+        print(f"-> Basariyla asilan yuk: {applied_loads}")
         penalty = 1e20
         for s in self.supports:
             nid = int(s[0])
