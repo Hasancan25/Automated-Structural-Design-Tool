@@ -89,18 +89,18 @@ class FrameAnalyzer:
         print("Adim 6: Sinir sartlari (Mesnetler) isleniyor...")
         penalty = 1e18
         for support_entry in self.supports:
-            # KRİTİK DÜZELTME: Sadece ilk 3 degeri al (node_id, dof, val)
-            # Bu sayede TXT dosyasindaki fazla veriler hataya sebep olmaz.
+            # SADECE ILK 3 DEGERI AL: Kaç veri olursa olsun hata almayız
             node_id, dof, val = support_entry[:3]
             
             # İndeksi hesapla
             idx = (int(node_id)-1)*3 + (int(dof)-1)
             
-            # GÜVENLİK KONTROLÜ: İndeks sınır içindeyse mesnedi işle
+            # GÜVENLİK KONTROLÜ
             if 0 <= idx < len(F_global):
                 K_global[idx, idx] += penalty
                 F_global[idx] += val * penalty
             else:
+                # Eğer geçersiz ID gelirse (100001 gibi) uyar ama çökme
                 print(f"[UYARI] Gecersiz Mesnet Dugum ID: {node_id}. Atlandi.")
 
 # 5. Cozucu (Solver) - GÜNCEL VERSİYON
