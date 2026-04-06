@@ -10,7 +10,7 @@ class FrameAnalyzer:
         self.con = con
         self.supports = supports
         self.loads = loads
-        self.node_map = node_map # ID -> İndeks haritası
+        self.node_map = node_map
         self.num_nodes = len(xy)
         self.num_dof = self.num_nodes * 3
 
@@ -19,22 +19,20 @@ class FrameAnalyzer:
         K_global = lil_matrix((self.num_dof, self.num_dof))
         F_global = np.zeros(self.num_dof)
 
-        # 1. Eleman Montajı
         print("Adim 1: Elemanlar monte ediliyor...")
         for elem in self.con:
-            # Satırdaki ID'leri gerçek indekse çevir
+            # Sütun kaymasına karşı koruma: [ID, N1, N2, Mat]
             if len(elem) >= 4: n1_id, n2_id, mat_id = int(elem[1]), int(elem[2]), int(elem[3])-1
             else: n1_id, n2_id, mat_id = int(elem[0]), int(elem[1]), int(elem[2])-1
             
             n1, n2 = self.node_map[n1_id], self.node_map[n2_id]
             E, A, I = self.m_props[mat_id if mat_id < len(self.m_props) else 0][:3]
             
-            x1, y1 = self.xy[n1]; x2, y2 = self.xy[n2]
-            L = np.sqrt((x2-x1)**2 + (y2-y1)**2)
-            c, s = (x2-x1)/L, (y2-y1)/L
+            L = np.sqrt(np.sum((self.xy[n2] - self.xy[n1])**2))
+            c, s = (self.xy[n2,0]-self.xy[n1,0])/L, (self.xy[n2,1]-self.xy[n1,1])/L
             
-            # Lokal rijitlik ve transformasyon (Standart FEA)
-            k_local = np.array([[E*A/L,0,0,-E*A/L,0,0],[0,12*E*I/L**3,6*E*I/L**2,0,-12*E*I/L**3,6*E*I/L**2],[0,6*E*I/L**2,4*E*I/L,0,6*E*I/L**2,2*E*I/L],[-E*A/L,0,0,E*A/L,0,0],[0,-12*E*I/L**3,-6*E*I/L**2,0,12*E*I/L**3,6*E*I/L**2],[0,6*E*I/L**2,2*E*I/L,0,-6*E*I/L**2,4*E*I/L]])
+            # Lokal rijitlik matrisi
+            k_local = np.array([[E*A/L,0,0,-E*A/L,0,0],[0,12*E*I/L**3,6*E*I/L**2,0,-12*E*I/L**3,6*E*I/L**2],[0,6*E*I/L**2,4*E*I/L,0,-6*E*I/L**2,2*E*I/L],[-E*A/L,0,0,E*A/L,0,0],[0,-12*E*I/L**3,-6*E*I/L**2,0,12*E*I/L**3,6*E*I/L**2],[0,6*E*I/L**2,2*E*I/L,0,-6*E*I/L**2,4*E*I/L]])
             T = np.array([[c,s,0,0,0,0],[-s,c,0,0,0,0],[0,0,1,0,0,0],[0,0,0,c,s,0],[0,0,0,-s,c,0],[0,0,0,0,0,1]])
             K_e = T.T @ k_local @ T
             
@@ -42,28 +40,26 @@ class FrameAnalyzer:
             for r in range(6):
                 for col in range(6): K_global[dofs[r], dofs[col]] += K_e[r, col]
 
-        # 2. Yükleri ve Mesnetleri As (Hata Buradaydı!)
         print("Adim 2: Yukler ve Mesnetler asiliyor...")
         applied_loads = 0
         for l in self.loads:
-            nid, dof, force = int(l[0]), int(l[1]), float(l[2])
+            nid = int(l[0])
             if nid in self.node_map:
-                F_global[self.node_map[nid]*3 + (dof-1)] += force
+                F_global[self.node_map[nid]*3 + (int(l[1])-1)] += l[2]
                 applied_loads += 1
         print(f"-> Basariyla asilan yuk: {applied_loads}")
 
         penalty = 1e20
         for s in self.supports:
-            nid, dof, val = int(s[0]), int(s[1]), float(s[2])
+            nid = int(s[0])
             if nid in self.node_map:
-                idx = self.node_map[nid]*3 + (dof-1)
+                idx = self.node_map[nid]*3 + (int(s[1])-1)
                 K_global[idx, idx] += penalty
-                F_global[idx] += val * penalty
+                F_global[idx] += s[2] * penalty
 
-        # 3. Çözücü
         print("\n--- Solver Baslatildi ---")
         K_sparse = K_global.tocsr()
         start = time.time()
         displacements, info = cg(K_sparse, F_global, rtol=1e-10, atol=1e-10, maxiter=50000)
-        print(f"Bitti! Sure: {time.time()-start:.2f} saniye.")
+        print(f"[BAŞARI] Cozum Suresi: {time.time() - start:.2f} saniye.")
         return displacements
