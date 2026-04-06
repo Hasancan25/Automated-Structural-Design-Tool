@@ -64,13 +64,26 @@ class FrameAnalyzer:
                 for col in range(6):
                     K_global[dofs[r], dofs[col]] += K_e[r, col]
         
-        # 3. Yukleri Uygula
+# 3. Yukleri Uygula (Korumalı Versiyon)
         print("Adim 5: Yukler sisteme dahil ediliyor...")
-        for load_entry in self.loads:
-            # Sadece ilk 3 degeri al (node_id, dof, force)
-            node_id, dof, force = load_entry[:3]
-            idx = (int(node_id)-1)*3 + (int(dof)-1)
-            F_global[idx] += force
+        for i, load_entry in enumerate(self.loads):
+            try:
+                # Veriyi al
+                node_id, dof, force = load_entry[:3]
+                
+                # İndeksi hesapla
+                idx = (int(node_id)-1)*3 + (int(dof)-1)
+                
+                # GÜVENLİK KONTROLÜ: Eğer indeks sınırı aşıyorsa o yükü atla ve uyar
+                if idx >= len(F_global) or idx < 0:
+                    print(f"[UYARI] Gecersiz Dugum ID (Satir {i}): {node_id}. Bu yuk atlandi.")
+                    continue
+                    
+                F_global[idx] += force
+                
+            except Exception as e:
+                print(f"[HATA] Yukleme sirasinda beklenmedik veri: {load_entry}")
+                continue
             
         # 4. Sinir Sartlarini Uygula (Penalty Method)
         # Mesnetli noktalara cok buyuk bir rijitlik ekleyerek hareketlerini sifirliyoruz.
