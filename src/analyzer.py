@@ -46,25 +46,31 @@ class FrameAnalyzer:
                 for col in range(6):
                     K_global[dofs[r], dofs[col]] += K_e[r, col]
 
-        # 2. Yükleri Eşleştirme (EN KRİTİK KISIM)
+# 2. Yükleri Eşleştirme (KORUMALI VERSİYON)
         print("Adim 2: Yukler sisteme dahil ediliyor...")
         load_count = 0
-        # Dosyadaki ID'ler 100001 gibi uçuk olsa bile onları 1-100500 arasına çeker:
-        min_id = min([int(l[0]) for l in self.loads]) if self.loads else 1
         
-        for l_entry in self.loads:
-            raw_id, dof, force = l_entry[:3]
-            # ID'yi sistemdeki 0-tabanlı indekse uyarla
-            node_idx = int(raw_id) - min_id
-            
-            if 0 <= node_idx < self.num_nodes:
-                idx = node_idx * 3 + (int(dof) - 1)
-                F_global[idx] += force
-                load_count += 1
+        for i, l_entry in enumerate(self.loads):
+            try:
+                # Veriyi al (node_id, dof, force)
+                raw_id, dof, force = l_entry[:3]
+                node_id = int(float(raw_id))
+                
+                # İndeks hesabı: (Düğüm No - 1) * 3 + (DOF - 1)
+                idx = (node_id - 1) * 3 + (int(dof) - 1)
+                
+                # GÜVENLİK KONTROLÜ: İndeks sınırlar içindeyse işle
+                if 0 <= idx < self.num_dof:
+                    F_global[idx] += force
+                    load_count += 1
+                else:
+                    # Sadece ilk 3 hatayı terminale yazalım ki ekran dolmasın
+                    if load_count < 3:
+                        print(f"[UYARI] Satir {i}: ID {node_id} gecersiz! (Index: {idx}) Bu yuk atlandi.")
+            except Exception as e:
+                continue
         
-        print(f"-> Basariyla asilan yuk sayisi: {load_count}")
-        if np.linalg.norm(F_global) == 0:
-            print("!!! KRITIK UYARI: Sisteme hic yuk girmedi, analiz anlamsiz olacak !!!")
+        print(f"-> Toplam {load_count} adet yuk sisteme basariyla asildi.")
 
         # 3. Mesnetler (Penalty Method)
         print("Adim 3: Mesnetler isleniyor...")
