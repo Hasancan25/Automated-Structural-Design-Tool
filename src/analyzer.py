@@ -28,18 +28,29 @@ class FrameAnalyzer:
         min_id = min(ids) if ids else 1
         print(f"-> Sistem Offseti Belirlendi: {min_id}")
 
-        # 2. Eleman Montajı (Assembly)
+# 1. Eleman Montajı (AKILLI SÜTUN SEÇİCİ)
         print("Adim 1: Elemanlar monte ediliyor...")
         for i, elem in enumerate(self.con):
-            n1, n2, mat_id = int(elem[0])-1, int(elem[1])-1, int(elem[2])-1
+            # Eğer satırda 4 sayı varsa (ID, N1, N2, Mat), son 3'ünü kullanır
+            # Eğer satırda 3 sayı varsa (N1, N2, Mat), hepsini kullanır
+            if len(elem) >= 4:
+                n1, n2, mat_id = int(elem[1])-1, int(elem[2])-1, int(elem[3])-1
+            else:
+                n1, n2, mat_id = int(elem[0])-1, int(elem[1])-1, int(elem[2])-1
+
+            # GÜVENLİK: Eğer mat_id hala çok büyükse, varsayılan olarak ilk malzemeyi (0) seç
+            if mat_id >= len(self.m_props) or mat_id < 0:
+                mat_id = 0
+            
             E, A, I = self.m_props[mat_id][:3]
             
+            # Koordinatlar ve Boy
             x1, y1 = self.xy[n1]
             x2, y2 = self.xy[n2]
             L = np.sqrt((x2-x1)**2 + (y2-y1)**2)
             c, s = (x2-x1)/L, (y2-y1)/L
             
-            # Lokal Rijitlik Matrisi
+            # Lokal Rijitlik Matrisi (Geri kalan işlemler aynı...)
             k_local = np.array([
                 [E*A/L, 0, 0, -E*A/L, 0, 0],
                 [0, 12*E*I/L**3, 6*E*I/L**2, 0, -12*E*I/L**3, 6*E*I/L**2],
