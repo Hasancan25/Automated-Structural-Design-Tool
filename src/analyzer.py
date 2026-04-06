@@ -1,120 +1,99 @@
 import numpy as np
-from src.matrix_lib import SparseStiffnessMatrix
-from src.solver import Solver
+from scipy.sparse import csr_matrix, lil_matrix
+from scipy.sparse.linalg import cg
+import time
 
 class FrameAnalyzer:
-    def __init__(self, xy, m_props, con, supports, nodal_loads, member_loads, bw=None):
+    def __init__(self, xy, m_props, con, supports, loads, design_params):
         self.xy = np.array(xy)
-        self.m_props = m_props
-        self.con = con
-        self.supports = supports
-        self.nodal_loads = nodal_loads
-        self.member_loads = member_loads
-        
-        self.num_node = len(xy)
-        self.num_elem = len(con)
-        self.e_array = np.zeros((self.num_node, 3), dtype=int)
-
-    def label_active_dof(self):
-        """Serbestlik derecelerini etiketler ve toplam denklem sayısını döner."""
-        count = 0
-        support_dict = {}
-        for s in self.supports:
-            if len(s) >= 4:
-                try:
-                    n_id = int(float(str(s[0]).replace(',', '').strip()))
-                    restraints = [int(float(str(x).replace(',', '').strip())) for x in s[1:4]]
-                    support_dict[n_id] = restraints
-                except: continue
-
-        for i in range(1, self.num_node + 1):
-            if i in support_dict:
-                restraints = support_dict[i]
-                for j in range(3):
-                    if j < len(restraints) and restraints[j] == 0:
-                        count += 1
-                        self.e_array[i-1][j] = count
-            else:
-                for j in range(3):
-                    count += 1
-                    self.e_array[i-1][j] = count
-        return count
-
-    def get_k_global(self, i_elem):
-        """Eleman lokal matrisini hesaplar ve global koordinatlara çevirir."""
-        s_n, e_n, m_id = self.con[i_elem]
-        m_id_val = int(float(str(m_id).replace(',', '').strip()))
-        prop_list = self.m_props[m_id_val - 1]
-        
-        if len(prop_list) >= 4:
-            E, A, I = [float(str(x).replace(',', '').strip()) for x in prop_list[1:4]]
-        else:
-            E, A, I = [float(str(x).replace(',', '').strip()) for x in prop_list]
-
-        s_idx = int(float(str(s_n).replace(',', '').strip())) - 1
-        e_idx = int(float(str(e_n).replace(',', '').strip())) - 1
-        x1, y1 = self.xy[s_idx]; x2, y2 = self.xy[e_idx]
-        L = np.sqrt((x2-x1)**2 + (y2-y1)**2)
-        c, s = (x2-x1)/L, (y2-y1)/L
-
-        # Lokal Rijitlik Matrisi
-        k_loc = np.array([
-            [E*A/L, 0, 0, -E*A/L, 0, 0],
-            [0, 12*E*I/L**3, 6*E*I/L**2, 0, -12*E*I/L**3, 6*E*I/L**2],
-            [0, 6*E*I/L**2, 4*E*I/L, 0, -6*E*I/L**2, 2*E*I/L],
-            [-E*A/L, 0, 0, E*A/L, 0, 0],
-            [0, -12*E*I/L**3, -6*E*I/L**2, 0, 12*E*I/L**3, -6*E*I/L**2],
-            [0, 6*E*I/L**2, 2*E*I/L, 0, 6*E*I/L**2, 4*E*I/L]
-        ])
-        T = np.array([[c,s,0,0,0,0],[-s,c,0,0,0,0],[0,0,1,0,0,0],[0,0,0,c,s,0],[0,0,0,-s,c,0],[0,0,0,0,0,1]])
-        return T.T @ k_loc @ T
+        self.m_props = np.array(m_props)  # [E, A, I]
+        self.con = np.array(con)          # [node1, node2, mat_id]
+        self.supports = supports          # [[node_id, dof, val], ...]
+        self.loads = loads                # [[node_id, dof, force], ...]
+        self.num_nodes = len(xy)
+        self.num_dof = self.num_nodes * 3
 
     def solve(self):
-        print("\n--- ANALİZ BAŞLADI ---")
-        num_eq = self.label_active_dof()
-        K_obj = SparseStiffnessMatrix(num_eq)
-        F = np.zeros(num_eq)
-
-        # --- AGRESİF YÜK OKUMA VE MONTAJ ---
-        load_count = 0
-        for l in self.nodal_loads:
-            try:
-                # Satırın ilk elemanı düğüm ID'si
-                n_id_str = str(l[0]).replace(',', '').strip()
-                n_id = int(float(n_id_str))
-                
-                # Eğer satırda yük değerleri varsa (ID + en az 1 yük değeri)
-                if len(l) >= 2:
-                    for j in range(len(l) - 1):
-                        if j < 3: # X, Y ve Moment (maksimum 3 serbestlik)
-                            val_str = str(l[j+1]).replace(',', '').strip()
-                            val = float(val_str)
-                            
-                            if val != 0:
-                                eq = self.e_array[n_id-1][j]
-                                if eq > 0:
-                                    F[eq-1] += val
-                                    load_count += 1
-            except: 
-                continue
+        print(f"\n--- Analiz Basladi: {self.num_nodes} Dugum, {len(self.con)} Eleman ---")
         
-        print(f"--- KRITIK KONTROL: Sisteme {load_count} adet AKTIF yuk girdi. ---")
-        print(f"--- MAX KUVVET: {np.max(np.abs(F)) if len(F)>0 else 0} N ---")
+        # 1. Global Rijitlik Matrisini Hazirla (Seyrek Matris Formatinda)
+        # 100 bin dugum icin 'lil_matrix' ile insa edip 'csr'ye cevirmek en hızlısıdır.
+        K_global = lil_matrix((self.num_dof, self.num_dof))
+        F_global = np.zeros(self.num_dof)
 
-        # Eleman Montajı (COO Formatı)
-        print(f"Adım 3: {self.num_elem} eleman monte ediliyor...")
-        for i in range(self.num_elem):
-            k_g = self.get_k_global(i)
-            s_idx = int(float(str(self.con[i][0]).replace(',', '').strip())) - 1
-            e_idx = int(float(str(self.con[i][1]).replace(',', '').strip())) - 1
-            dofs = list(self.e_array[s_idx]) + list(self.e_array[e_idx])
+        # 2. Eleman Rijitlik Matrislerini Monte Et (Assembly)
+        print("Adim 3: Elemanlar sisteme monte ediliyor...")
+        for i, elem in enumerate(self.con):
+            n1, n2, mat_id = int(elem[0])-1, int(elem[1])-1, int(elem[2])-1
+            E, A, I = self.m_props[mat_id]
+            
+            # Koordinatlar ve Boy
+            x1, y1 = self.xy[n1]
+            x2, y2 = self.xy[n2]
+            L = np.sqrt((x2-x1)**2 + (y2-y1)**2)
+            c = (x2-x1)/L # cos
+            s = (y2-y1)/L # sin
+            
+            # Lokal Rijitlik Matrisi (Beam Element)
+            # k = [EA/L, 12EI/L^3, 6EI/L^2, ...]
+            k_local = np.array([
+                [E*A/L, 0, 0, -E*A/L, 0, 0],
+                [0, 12*E*I/L**3, 6*E*I/L**2, 0, -12*E*I/L**3, 6*E*I/L**2],
+                [0, 6*E*I/L**2, 4*E*I/L, 0, -6*E*I/L**2, 2*E*I/L],
+                [-E*A/L, 0, 0, E*A/L, 0, 0],
+                [0, -12*E*I/L**3, -6*E*I/L**2, 0, 12*E*I/L**3, 6*E*I/L**2],
+                [0, 6*E*I/L**2, 2*E*I/L, 0, -6*E*I/L**2, 4*E*I/L]
+            ])
+            
+            # Transformasyon Matrisi (T)
+            T = np.array([
+                [c, s, 0, 0, 0, 0],
+                [-s, c, 0, 0, 0, 0],
+                [0, 0, 1, 0, 0, 0],
+                [0, 0, 0, c, s, 0],
+                [0, 0, 0, -s, c, 0],
+                [0, 0, 0, 0, 0, 1]
+            ])
+            
+            # Global Eleman Matrisi: Ke = T.T * k_local * T
+            K_e = T.T @ k_local @ T
+            
+            # Global Matrise Yerlestirme
+            dofs = [n1*3, n1*3+1, n1*3+2, n2*3, n2*3+1, n2*3+2]
             for r in range(6):
-                for c in range(6):
-                    if dofs[r] > 0 and dofs[c] > 0:
-                        K_obj.assemble(dofs[r], dofs[c], k_g[r][c])
+                for col in range(6):
+                    K_global[dofs[r], dofs[col]] += K_e[r, col]
 
-        # Matrisi finalize et ve çözücüye gönder
-        K_sparse = K_obj.finalize()
-        print("Adım 4: Iterative Solver (CG) başlatılıyor...")
-        solver = Solver()
-        return solver.solve_sparse_system(K_sparse, F)
+        # 3. Yukleri Uygula
+        for node_id, dof, force in self.loads:
+            idx = (int(node_id)-1)*3 + (int(dof)-1)
+            F_global[idx] += force
+
+        # 4. Sinir Sartlarini Uygula (Penalty Method)
+        # Mesnetli noktalara cok buyuk bir rijitlik ekleyerek hareketlerini sifirliyoruz.
+        print("Adim 4: Sinir sartlari (Mesnetler) isleniyor...")
+        penalty = 1e18
+        for node_id, dof, val in self.supports:
+            idx = (int(node_id)-1)*3 + (int(dof)-1)
+            K_global[idx, idx] += penalty
+            F_global[idx] += val * penalty
+
+        # 5. Cozucu (Solver) - KRITIK AYARLAR BURADA
+        print("\n--- Iterative Solver (CG) Baslatildi ---")
+        K_sparse = K_global.tocsr() # Isleme hizli girmek icin CSR formatina gec
+        
+        start_time = time.time()
+        displacements, info = cg(
+            K_sparse, 
+            F_global, 
+            tol=1e-10,       # Hassasiyet artirildi
+            max_iter=50000    # Inatci mod acildi
+        )
+        end_time = time.time()
+
+        if info == 0:
+            print(f"[BAŞARI] Çözücü yakinsadi! Süre: {end_time - start_time:.2f} saniye.")
+        else:
+            print(f"[UYARI] Çözücü {max_iter} adimda tam yakinsayamadi, sonuc yaklasik olabilir.")
+
+        return displacements
