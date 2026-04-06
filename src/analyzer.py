@@ -63,12 +63,15 @@ class FrameAnalyzer:
             for r in range(6):
                 for col in range(6):
                     K_global[dofs[r], dofs[col]] += K_e[r, col]
-
+        
         # 3. Yukleri Uygula
-        for node_id, dof, force in self.loads:
+        print("Adim 5: Yukler sisteme dahil ediliyor...")
+        for load_entry in self.loads:
+            # Sadece ilk 3 degeri al (node_id, dof, force)
+            node_id, dof, force = load_entry[:3]
             idx = (int(node_id)-1)*3 + (int(dof)-1)
             F_global[idx] += force
-
+            
         # 4. Sinir Sartlarini Uygula (Penalty Method)
         # Mesnetli noktalara cok buyuk bir rijitlik ekleyerek hareketlerini sifirliyoruz.
         print("Adim 4: Sinir sartlari (Mesnetler) isleniyor...")
