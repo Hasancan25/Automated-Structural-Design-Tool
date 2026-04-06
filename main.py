@@ -5,19 +5,28 @@ import matplotlib.pyplot as plt
 from src.input_parser import InputParser
 from src.analyzer import FrameAnalyzer
 
-# --- GÖRSELLEŞTİRME MODÜLÜ (BURAYA EKLEDİM) ---
 def plot_deflection(xy, con, displacements, scale_factor=1000):
     print(f"\nGrafik ciziliyor (Olcek: x{scale_factor})... Lutfen bekleyin.")
     plt.figure(figsize=(10, 12))
+    
     xy = np.array(xy)
-    num_node = len(xy)
-    xy_def = np.zeros_like(xy)
+    # HATA BURADAYDI: num_node'u displacements uzunluğuna göre kısıtlıyoruz
+    num_node = min(len(xy), len(displacements) // 3) 
+    xy_def = np.zeros((num_node, 2))
     
     for i in range(num_node):
-        u = displacements[i*3]
-        v = displacements[i*3 + 1]
+        # İndekslerin dışarı taşmaması için kontrol
+        idx_x = i * 3
+        idx_y = i * 3 + 1
+        
+        u = displacements[idx_x]
+        v = displacements[idx_y]
+        
         xy_def[i, 0] = xy[i, 0] + u * scale_factor
         xy_def[i, 1] = xy[i, 1] + v * scale_factor
+
+    # Çizim kısmı aynı kalabilir...
+    # (Buradan aşağısı eski kodunla aynı)
 
     # Hiz icin her 5 elemanda bir cizim yapiyoruz (100bin dugumde cok kasar)
     for i, elem in enumerate(con):
