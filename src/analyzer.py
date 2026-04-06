@@ -111,7 +111,7 @@ class FrameAnalyzer:
         displacements, info = cg(
             K_sparse, 
             F_global, 
-            tol=1e-10,       # Hassasiyet artirildi
+            rtol=1e-10,       # Hassasiyet artirildi
             max_iter=50000    # Inatci mod acildi
         )
         end_time = time.time()
