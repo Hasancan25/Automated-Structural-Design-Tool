@@ -116,7 +116,7 @@ class FrameAnalyzer:
             F_global, 
             rtol=1e-10,       # 'tol' olan yer 'rtol' yapıldı
             atol=1e-10,       # Mutlak tolerans da eklendi
-            max_iter=50000    # 200 katlı bina için inatçı mod
+            maxiter=50000    # 200 katlı bina için inatçı mod
         )
         
         end_time = time.time()
