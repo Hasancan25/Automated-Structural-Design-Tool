@@ -1,0 +1,3630 @@
+{
+    "materials": [
+        {
+            "id": 1,
+            "name": "Column_BU_KOLON_A\u011eIR",
+            "E": 200000000.0,
+            "A": 0.0242,
+            "I": 0.0018283296831955922
+        },
+        {
+            "id": 2,
+            "name": "Beam_HE300A",
+            "E": 200000000.0,
+            "A": 0.01125,
+            "I": 0.0001826
+        },
+        {
+            "id": 3,
+            "name": "Brace_IPE200",
+            "E": 200000000.0,
+            "A": 0.002848,
+            "I": 1.943e-05
+        }
+    ],
+    "nodes": [
+        {
+            "id": 0,
+            "x": 0.0,
+            "y": 0.0
+        },
+        {
+            "id": 1,
+            "x": 5.0,
+            "y": 0.0
+        },
+        {
+            "id": 2,
+            "x": 10.0,
+            "y": 0.0
+        },
+        {
+            "id": 3,
+            "x": 15.0,
+            "y": 0.0
+        },
+        {
+            "id": 4,
+            "x": 20.0,
+            "y": 0.0
+        },
+        {
+            "id": 5,
+            "x": 25.0,
+            "y": 0.0
+        },
+        {
+            "id": 6,
+            "x": 0.0,
+            "y": 3.0
+        },
+        {
+            "id": 7,
+            "x": 5.0,
+            "y": 3.0
+        },
+        {
+            "id": 8,
+            "x": 10.0,
+            "y": 3.0
+        },
+        {
+            "id": 9,
+            "x": 15.0,
+            "y": 3.0
+        },
+        {
+            "id": 10,
+            "x": 20.0,
+            "y": 3.0
+        },
+        {
+            "id": 11,
+            "x": 25.0,
+            "y": 3.0
+        },
+        {
+            "id": 12,
+            "x": 0.0,
+            "y": 6.0
+        },
+        {
+            "id": 13,
+            "x": 5.0,
+            "y": 6.0
+        },
+        {
+            "id": 14,
+            "x": 10.0,
+            "y": 6.0
+        },
+        {
+            "id": 15,
+            "x": 15.0,
+            "y": 6.0
+        },
+        {
+            "id": 16,
+            "x": 20.0,
+            "y": 6.0
+        },
+        {
+            "id": 17,
+            "x": 25.0,
+            "y": 6.0
+        },
+        {
+            "id": 18,
+            "x": 0.0,
+            "y": 9.0
+        },
+        {
+            "id": 19,
+            "x": 5.0,
+            "y": 9.0
+        },
+        {
+            "id": 20,
+            "x": 10.0,
+            "y": 9.0
+        },
+        {
+            "id": 21,
+            "x": 15.0,
+            "y": 9.0
+        },
+        {
+            "id": 22,
+            "x": 20.0,
+            "y": 9.0
+        },
+        {
+            "id": 23,
+            "x": 25.0,
+            "y": 9.0
+        },
+        {
+            "id": 24,
+            "x": 0.0,
+            "y": 12.0
+        },
+        {
+            "id": 25,
+            "x": 5.0,
+            "y": 12.0
+        },
+        {
+            "id": 26,
+            "x": 10.0,
+            "y": 12.0
+        },
+        {
+            "id": 27,
+            "x": 15.0,
+            "y": 12.0
+        },
+        {
+            "id": 28,
+            "x": 20.0,
+            "y": 12.0
+        },
+        {
+            "id": 29,
+            "x": 25.0,
+            "y": 12.0
+        },
+        {
+            "id": 30,
+            "x": 0.0,
+            "y": 15.0
+        },
+        {
+            "id": 31,
+            "x": 5.0,
+            "y": 15.0
+        },
+        {
+            "id": 32,
+            "x": 10.0,
+            "y": 15.0
+        },
+        {
+            "id": 33,
+            "x": 15.0,
+            "y": 15.0
+        },
+        {
+            "id": 34,
+            "x": 20.0,
+            "y": 15.0
+        },
+        {
+            "id": 35,
+            "x": 25.0,
+            "y": 15.0
+        },
+        {
+            "id": 36,
+            "x": 0.0,
+            "y": 18.0
+        },
+        {
+            "id": 37,
+            "x": 5.0,
+            "y": 18.0
+        },
+        {
+            "id": 38,
+            "x": 10.0,
+            "y": 18.0
+        },
+        {
+            "id": 39,
+            "x": 15.0,
+            "y": 18.0
+        },
+        {
+            "id": 40,
+            "x": 20.0,
+            "y": 18.0
+        },
+        {
+            "id": 41,
+            "x": 25.0,
+            "y": 18.0
+        },
+        {
+            "id": 42,
+            "x": 0.0,
+            "y": 21.0
+        },
+        {
+            "id": 43,
+            "x": 5.0,
+            "y": 21.0
+        },
+        {
+            "id": 44,
+            "x": 10.0,
+            "y": 21.0
+        },
+        {
+            "id": 45,
+            "x": 15.0,
+            "y": 21.0
+        },
+        {
+            "id": 46,
+            "x": 20.0,
+            "y": 21.0
+        },
+        {
+            "id": 47,
+            "x": 25.0,
+            "y": 21.0
+        },
+        {
+            "id": 48,
+            "x": 0.0,
+            "y": 24.0
+        },
+        {
+            "id": 49,
+            "x": 5.0,
+            "y": 24.0
+        },
+        {
+            "id": 50,
+            "x": 10.0,
+            "y": 24.0
+        },
+        {
+            "id": 51,
+            "x": 15.0,
+            "y": 24.0
+        },
+        {
+            "id": 52,
+            "x": 20.0,
+            "y": 24.0
+        },
+        {
+            "id": 53,
+            "x": 25.0,
+            "y": 24.0
+        },
+        {
+            "id": 54,
+            "x": 0.0,
+            "y": 27.0
+        },
+        {
+            "id": 55,
+            "x": 5.0,
+            "y": 27.0
+        },
+        {
+            "id": 56,
+            "x": 10.0,
+            "y": 27.0
+        },
+        {
+            "id": 57,
+            "x": 15.0,
+            "y": 27.0
+        },
+        {
+            "id": 58,
+            "x": 20.0,
+            "y": 27.0
+        },
+        {
+            "id": 59,
+            "x": 25.0,
+            "y": 27.0
+        },
+        {
+            "id": 60,
+            "x": 0.0,
+            "y": 30.0
+        },
+        {
+            "id": 61,
+            "x": 5.0,
+            "y": 30.0
+        },
+        {
+            "id": 62,
+            "x": 10.0,
+            "y": 30.0
+        },
+        {
+            "id": 63,
+            "x": 15.0,
+            "y": 30.0
+        },
+        {
+            "id": 64,
+            "x": 20.0,
+            "y": 30.0
+        },
+        {
+            "id": 65,
+            "x": 25.0,
+            "y": 30.0
+        },
+        {
+            "id": 66,
+            "x": 0.0,
+            "y": 33.0
+        },
+        {
+            "id": 67,
+            "x": 5.0,
+            "y": 33.0
+        },
+        {
+            "id": 68,
+            "x": 10.0,
+            "y": 33.0
+        },
+        {
+            "id": 69,
+            "x": 15.0,
+            "y": 33.0
+        },
+        {
+            "id": 70,
+            "x": 20.0,
+            "y": 33.0
+        },
+        {
+            "id": 71,
+            "x": 25.0,
+            "y": 33.0
+        },
+        {
+            "id": 72,
+            "x": 0.0,
+            "y": 36.0
+        },
+        {
+            "id": 73,
+            "x": 5.0,
+            "y": 36.0
+        },
+        {
+            "id": 74,
+            "x": 10.0,
+            "y": 36.0
+        },
+        {
+            "id": 75,
+            "x": 15.0,
+            "y": 36.0
+        },
+        {
+            "id": 76,
+            "x": 20.0,
+            "y": 36.0
+        },
+        {
+            "id": 77,
+            "x": 25.0,
+            "y": 36.0
+        },
+        {
+            "id": 78,
+            "x": 0.0,
+            "y": 39.0
+        },
+        {
+            "id": 79,
+            "x": 5.0,
+            "y": 39.0
+        },
+        {
+            "id": 80,
+            "x": 10.0,
+            "y": 39.0
+        },
+        {
+            "id": 81,
+            "x": 15.0,
+            "y": 39.0
+        },
+        {
+            "id": 82,
+            "x": 20.0,
+            "y": 39.0
+        },
+        {
+            "id": 83,
+            "x": 25.0,
+            "y": 39.0
+        },
+        {
+            "id": 84,
+            "x": 0.0,
+            "y": 42.0
+        },
+        {
+            "id": 85,
+            "x": 5.0,
+            "y": 42.0
+        },
+        {
+            "id": 86,
+            "x": 10.0,
+            "y": 42.0
+        },
+        {
+            "id": 87,
+            "x": 15.0,
+            "y": 42.0
+        },
+        {
+            "id": 88,
+            "x": 20.0,
+            "y": 42.0
+        },
+        {
+            "id": 89,
+            "x": 25.0,
+            "y": 42.0
+        },
+        {
+            "id": 90,
+            "x": 0.0,
+            "y": 45.0
+        },
+        {
+            "id": 91,
+            "x": 5.0,
+            "y": 45.0
+        },
+        {
+            "id": 92,
+            "x": 10.0,
+            "y": 45.0
+        },
+        {
+            "id": 93,
+            "x": 15.0,
+            "y": 45.0
+        },
+        {
+            "id": 94,
+            "x": 20.0,
+            "y": 45.0
+        },
+        {
+            "id": 95,
+            "x": 25.0,
+            "y": 45.0
+        },
+        {
+            "id": 96,
+            "x": 0.0,
+            "y": 48.0
+        },
+        {
+            "id": 97,
+            "x": 5.0,
+            "y": 48.0
+        },
+        {
+            "id": 98,
+            "x": 10.0,
+            "y": 48.0
+        },
+        {
+            "id": 99,
+            "x": 15.0,
+            "y": 48.0
+        },
+        {
+            "id": 100,
+            "x": 20.0,
+            "y": 48.0
+        },
+        {
+            "id": 101,
+            "x": 25.0,
+            "y": 48.0
+        },
+        {
+            "id": 102,
+            "x": 0.0,
+            "y": 51.0
+        },
+        {
+            "id": 103,
+            "x": 5.0,
+            "y": 51.0
+        },
+        {
+            "id": 104,
+            "x": 10.0,
+            "y": 51.0
+        },
+        {
+            "id": 105,
+            "x": 15.0,
+            "y": 51.0
+        },
+        {
+            "id": 106,
+            "x": 20.0,
+            "y": 51.0
+        },
+        {
+            "id": 107,
+            "x": 25.0,
+            "y": 51.0
+        },
+        {
+            "id": 108,
+            "x": 0.0,
+            "y": 54.0
+        },
+        {
+            "id": 109,
+            "x": 5.0,
+            "y": 54.0
+        },
+        {
+            "id": 110,
+            "x": 10.0,
+            "y": 54.0
+        },
+        {
+            "id": 111,
+            "x": 15.0,
+            "y": 54.0
+        },
+        {
+            "id": 112,
+            "x": 20.0,
+            "y": 54.0
+        },
+        {
+            "id": 113,
+            "x": 25.0,
+            "y": 54.0
+        },
+        {
+            "id": 114,
+            "x": 0.0,
+            "y": 57.0
+        },
+        {
+            "id": 115,
+            "x": 5.0,
+            "y": 57.0
+        },
+        {
+            "id": 116,
+            "x": 10.0,
+            "y": 57.0
+        },
+        {
+            "id": 117,
+            "x": 15.0,
+            "y": 57.0
+        },
+        {
+            "id": 118,
+            "x": 20.0,
+            "y": 57.0
+        },
+        {
+            "id": 119,
+            "x": 25.0,
+            "y": 57.0
+        },
+        {
+            "id": 120,
+            "x": 0.0,
+            "y": 60.0
+        },
+        {
+            "id": 121,
+            "x": 5.0,
+            "y": 60.0
+        },
+        {
+            "id": 122,
+            "x": 10.0,
+            "y": 60.0
+        },
+        {
+            "id": 123,
+            "x": 15.0,
+            "y": 60.0
+        },
+        {
+            "id": 124,
+            "x": 20.0,
+            "y": 60.0
+        },
+        {
+            "id": 125,
+            "x": 25.0,
+            "y": 60.0
+        },
+        {
+            "id": 126,
+            "x": 0.0,
+            "y": 63.0
+        },
+        {
+            "id": 127,
+            "x": 5.0,
+            "y": 63.0
+        },
+        {
+            "id": 128,
+            "x": 10.0,
+            "y": 63.0
+        },
+        {
+            "id": 129,
+            "x": 15.0,
+            "y": 63.0
+        },
+        {
+            "id": 130,
+            "x": 20.0,
+            "y": 63.0
+        },
+        {
+            "id": 131,
+            "x": 25.0,
+            "y": 63.0
+        },
+        {
+            "id": 132,
+            "x": 0.0,
+            "y": 66.0
+        },
+        {
+            "id": 133,
+            "x": 5.0,
+            "y": 66.0
+        },
+        {
+            "id": 134,
+            "x": 10.0,
+            "y": 66.0
+        },
+        {
+            "id": 135,
+            "x": 15.0,
+            "y": 66.0
+        },
+        {
+            "id": 136,
+            "x": 20.0,
+            "y": 66.0
+        },
+        {
+            "id": 137,
+            "x": 25.0,
+            "y": 66.0
+        }
+    ],
+    "elements": [
+        {
+            "id": 0,
+            "node_i": 0,
+            "node_j": 6,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 1,
+            "node_i": 6,
+            "node_j": 12,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 2,
+            "node_i": 12,
+            "node_j": 18,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 3,
+            "node_i": 18,
+            "node_j": 24,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 4,
+            "node_i": 24,
+            "node_j": 30,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 5,
+            "node_i": 30,
+            "node_j": 36,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 6,
+            "node_i": 36,
+            "node_j": 42,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 7,
+            "node_i": 42,
+            "node_j": 48,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 8,
+            "node_i": 48,
+            "node_j": 54,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 9,
+            "node_i": 54,
+            "node_j": 60,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 10,
+            "node_i": 60,
+            "node_j": 66,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 11,
+            "node_i": 66,
+            "node_j": 72,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 12,
+            "node_i": 72,
+            "node_j": 78,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 13,
+            "node_i": 78,
+            "node_j": 84,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 14,
+            "node_i": 84,
+            "node_j": 90,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 15,
+            "node_i": 90,
+            "node_j": 96,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 16,
+            "node_i": 96,
+            "node_j": 102,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 17,
+            "node_i": 102,
+            "node_j": 108,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 18,
+            "node_i": 108,
+            "node_j": 114,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 19,
+            "node_i": 114,
+            "node_j": 120,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 20,
+            "node_i": 120,
+            "node_j": 126,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 21,
+            "node_i": 126,
+            "node_j": 132,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 22,
+            "node_i": 1,
+            "node_j": 7,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 23,
+            "node_i": 7,
+            "node_j": 13,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 24,
+            "node_i": 13,
+            "node_j": 19,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 25,
+            "node_i": 19,
+            "node_j": 25,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 26,
+            "node_i": 25,
+            "node_j": 31,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 27,
+            "node_i": 31,
+            "node_j": 37,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 28,
+            "node_i": 37,
+            "node_j": 43,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 29,
+            "node_i": 43,
+            "node_j": 49,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 30,
+            "node_i": 49,
+            "node_j": 55,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 31,
+            "node_i": 55,
+            "node_j": 61,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 32,
+            "node_i": 61,
+            "node_j": 67,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 33,
+            "node_i": 67,
+            "node_j": 73,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 34,
+            "node_i": 73,
+            "node_j": 79,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 35,
+            "node_i": 79,
+            "node_j": 85,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 36,
+            "node_i": 85,
+            "node_j": 91,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 37,
+            "node_i": 91,
+            "node_j": 97,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 38,
+            "node_i": 97,
+            "node_j": 103,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 39,
+            "node_i": 103,
+            "node_j": 109,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 40,
+            "node_i": 109,
+            "node_j": 115,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 41,
+            "node_i": 115,
+            "node_j": 121,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 42,
+            "node_i": 121,
+            "node_j": 127,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 43,
+            "node_i": 127,
+            "node_j": 133,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 44,
+            "node_i": 2,
+            "node_j": 8,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 45,
+            "node_i": 8,
+            "node_j": 14,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 46,
+            "node_i": 14,
+            "node_j": 20,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 47,
+            "node_i": 20,
+            "node_j": 26,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 48,
+            "node_i": 26,
+            "node_j": 32,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 49,
+            "node_i": 32,
+            "node_j": 38,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 50,
+            "node_i": 38,
+            "node_j": 44,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 51,
+            "node_i": 44,
+            "node_j": 50,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 52,
+            "node_i": 50,
+            "node_j": 56,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 53,
+            "node_i": 56,
+            "node_j": 62,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 54,
+            "node_i": 62,
+            "node_j": 68,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 55,
+            "node_i": 68,
+            "node_j": 74,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 56,
+            "node_i": 74,
+            "node_j": 80,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 57,
+            "node_i": 80,
+            "node_j": 86,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 58,
+            "node_i": 86,
+            "node_j": 92,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 59,
+            "node_i": 92,
+            "node_j": 98,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 60,
+            "node_i": 98,
+            "node_j": 104,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 61,
+            "node_i": 104,
+            "node_j": 110,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 62,
+            "node_i": 110,
+            "node_j": 116,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 63,
+            "node_i": 116,
+            "node_j": 122,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 64,
+            "node_i": 122,
+            "node_j": 128,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 65,
+            "node_i": 128,
+            "node_j": 134,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 66,
+            "node_i": 3,
+            "node_j": 9,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 67,
+            "node_i": 9,
+            "node_j": 15,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 68,
+            "node_i": 15,
+            "node_j": 21,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 69,
+            "node_i": 21,
+            "node_j": 27,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 70,
+            "node_i": 27,
+            "node_j": 33,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 71,
+            "node_i": 33,
+            "node_j": 39,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 72,
+            "node_i": 39,
+            "node_j": 45,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 73,
+            "node_i": 45,
+            "node_j": 51,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 74,
+            "node_i": 51,
+            "node_j": 57,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 75,
+            "node_i": 57,
+            "node_j": 63,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 76,
+            "node_i": 63,
+            "node_j": 69,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 77,
+            "node_i": 69,
+            "node_j": 75,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 78,
+            "node_i": 75,
+            "node_j": 81,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 79,
+            "node_i": 81,
+            "node_j": 87,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 80,
+            "node_i": 87,
+            "node_j": 93,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 81,
+            "node_i": 93,
+            "node_j": 99,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 82,
+            "node_i": 99,
+            "node_j": 105,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 83,
+            "node_i": 105,
+            "node_j": 111,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 84,
+            "node_i": 111,
+            "node_j": 117,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 85,
+            "node_i": 117,
+            "node_j": 123,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 86,
+            "node_i": 123,
+            "node_j": 129,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 87,
+            "node_i": 129,
+            "node_j": 135,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 88,
+            "node_i": 4,
+            "node_j": 10,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 89,
+            "node_i": 10,
+            "node_j": 16,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 90,
+            "node_i": 16,
+            "node_j": 22,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 91,
+            "node_i": 22,
+            "node_j": 28,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 92,
+            "node_i": 28,
+            "node_j": 34,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 93,
+            "node_i": 34,
+            "node_j": 40,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 94,
+            "node_i": 40,
+            "node_j": 46,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 95,
+            "node_i": 46,
+            "node_j": 52,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 96,
+            "node_i": 52,
+            "node_j": 58,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 97,
+            "node_i": 58,
+            "node_j": 64,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 98,
+            "node_i": 64,
+            "node_j": 70,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 99,
+            "node_i": 70,
+            "node_j": 76,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 100,
+            "node_i": 76,
+            "node_j": 82,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 101,
+            "node_i": 82,
+            "node_j": 88,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 102,
+            "node_i": 88,
+            "node_j": 94,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 103,
+            "node_i": 94,
+            "node_j": 100,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 104,
+            "node_i": 100,
+            "node_j": 106,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 105,
+            "node_i": 106,
+            "node_j": 112,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 106,
+            "node_i": 112,
+            "node_j": 118,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 107,
+            "node_i": 118,
+            "node_j": 124,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 108,
+            "node_i": 124,
+            "node_j": 130,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 109,
+            "node_i": 130,
+            "node_j": 136,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 110,
+            "node_i": 5,
+            "node_j": 11,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 111,
+            "node_i": 11,
+            "node_j": 17,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 112,
+            "node_i": 17,
+            "node_j": 23,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 113,
+            "node_i": 23,
+            "node_j": 29,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 114,
+            "node_i": 29,
+            "node_j": 35,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 115,
+            "node_i": 35,
+            "node_j": 41,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 116,
+            "node_i": 41,
+            "node_j": 47,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 117,
+            "node_i": 47,
+            "node_j": 53,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 118,
+            "node_i": 53,
+            "node_j": 59,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 119,
+            "node_i": 59,
+            "node_j": 65,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 120,
+            "node_i": 65,
+            "node_j": 71,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 121,
+            "node_i": 71,
+            "node_j": 77,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 122,
+            "node_i": 77,
+            "node_j": 83,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 123,
+            "node_i": 83,
+            "node_j": 89,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 124,
+            "node_i": 89,
+            "node_j": 95,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 125,
+            "node_i": 95,
+            "node_j": 101,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 126,
+            "node_i": 101,
+            "node_j": 107,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 127,
+            "node_i": 107,
+            "node_j": 113,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 128,
+            "node_i": 113,
+            "node_j": 119,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 129,
+            "node_i": 119,
+            "node_j": 125,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 130,
+            "node_i": 125,
+            "node_j": 131,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 131,
+            "node_i": 131,
+            "node_j": 137,
+            "material_id": 1,
+            "load_patterns": {
+                "DEAD": 0.0,
+                "LIVE": 0.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 132,
+            "node_i": 6,
+            "node_j": 7,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 133,
+            "node_i": 7,
+            "node_j": 8,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 134,
+            "node_i": 8,
+            "node_j": 9,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 135,
+            "node_i": 9,
+            "node_j": 10,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 136,
+            "node_i": 10,
+            "node_j": 11,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 137,
+            "node_i": 12,
+            "node_j": 13,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 138,
+            "node_i": 13,
+            "node_j": 14,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 139,
+            "node_i": 14,
+            "node_j": 15,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 140,
+            "node_i": 15,
+            "node_j": 16,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 141,
+            "node_i": 16,
+            "node_j": 17,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 142,
+            "node_i": 18,
+            "node_j": 19,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 143,
+            "node_i": 19,
+            "node_j": 20,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 144,
+            "node_i": 20,
+            "node_j": 21,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 145,
+            "node_i": 21,
+            "node_j": 22,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 146,
+            "node_i": 22,
+            "node_j": 23,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 147,
+            "node_i": 24,
+            "node_j": 25,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 148,
+            "node_i": 25,
+            "node_j": 26,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 149,
+            "node_i": 26,
+            "node_j": 27,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 150,
+            "node_i": 27,
+            "node_j": 28,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 151,
+            "node_i": 28,
+            "node_j": 29,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 152,
+            "node_i": 30,
+            "node_j": 31,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 153,
+            "node_i": 31,
+            "node_j": 32,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 154,
+            "node_i": 32,
+            "node_j": 33,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 155,
+            "node_i": 33,
+            "node_j": 34,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 156,
+            "node_i": 34,
+            "node_j": 35,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 157,
+            "node_i": 36,
+            "node_j": 37,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 158,
+            "node_i": 37,
+            "node_j": 38,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 159,
+            "node_i": 38,
+            "node_j": 39,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 160,
+            "node_i": 39,
+            "node_j": 40,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 161,
+            "node_i": 40,
+            "node_j": 41,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 162,
+            "node_i": 42,
+            "node_j": 43,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 163,
+            "node_i": 43,
+            "node_j": 44,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 164,
+            "node_i": 44,
+            "node_j": 45,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 165,
+            "node_i": 45,
+            "node_j": 46,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 166,
+            "node_i": 46,
+            "node_j": 47,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 167,
+            "node_i": 48,
+            "node_j": 49,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 168,
+            "node_i": 49,
+            "node_j": 50,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 169,
+            "node_i": 50,
+            "node_j": 51,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 170,
+            "node_i": 51,
+            "node_j": 52,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 171,
+            "node_i": 52,
+            "node_j": 53,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 172,
+            "node_i": 54,
+            "node_j": 55,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 173,
+            "node_i": 55,
+            "node_j": 56,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 174,
+            "node_i": 56,
+            "node_j": 57,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 175,
+            "node_i": 57,
+            "node_j": 58,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 176,
+            "node_i": 58,
+            "node_j": 59,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 177,
+            "node_i": 60,
+            "node_j": 61,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 178,
+            "node_i": 61,
+            "node_j": 62,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 179,
+            "node_i": 62,
+            "node_j": 63,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 180,
+            "node_i": 63,
+            "node_j": 64,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 181,
+            "node_i": 64,
+            "node_j": 65,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 182,
+            "node_i": 66,
+            "node_j": 67,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 183,
+            "node_i": 67,
+            "node_j": 68,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 184,
+            "node_i": 68,
+            "node_j": 69,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 185,
+            "node_i": 69,
+            "node_j": 70,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 186,
+            "node_i": 70,
+            "node_j": 71,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 187,
+            "node_i": 72,
+            "node_j": 73,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 188,
+            "node_i": 73,
+            "node_j": 74,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 189,
+            "node_i": 74,
+            "node_j": 75,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 190,
+            "node_i": 75,
+            "node_j": 76,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 191,
+            "node_i": 76,
+            "node_j": 77,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 192,
+            "node_i": 78,
+            "node_j": 79,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 193,
+            "node_i": 79,
+            "node_j": 80,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 194,
+            "node_i": 80,
+            "node_j": 81,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 195,
+            "node_i": 81,
+            "node_j": 82,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 196,
+            "node_i": 82,
+            "node_j": 83,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 197,
+            "node_i": 84,
+            "node_j": 85,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 198,
+            "node_i": 85,
+            "node_j": 86,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 199,
+            "node_i": 86,
+            "node_j": 87,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 200,
+            "node_i": 87,
+            "node_j": 88,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 201,
+            "node_i": 88,
+            "node_j": 89,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 202,
+            "node_i": 90,
+            "node_j": 91,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 203,
+            "node_i": 91,
+            "node_j": 92,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 204,
+            "node_i": 92,
+            "node_j": 93,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 205,
+            "node_i": 93,
+            "node_j": 94,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 206,
+            "node_i": 94,
+            "node_j": 95,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 207,
+            "node_i": 96,
+            "node_j": 97,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 208,
+            "node_i": 97,
+            "node_j": 98,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 209,
+            "node_i": 98,
+            "node_j": 99,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 210,
+            "node_i": 99,
+            "node_j": 100,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 211,
+            "node_i": 100,
+            "node_j": 101,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 212,
+            "node_i": 102,
+            "node_j": 103,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 213,
+            "node_i": 103,
+            "node_j": 104,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 214,
+            "node_i": 104,
+            "node_j": 105,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 215,
+            "node_i": 105,
+            "node_j": 106,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 216,
+            "node_i": 106,
+            "node_j": 107,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 217,
+            "node_i": 108,
+            "node_j": 109,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 218,
+            "node_i": 109,
+            "node_j": 110,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 219,
+            "node_i": 110,
+            "node_j": 111,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 220,
+            "node_i": 111,
+            "node_j": 112,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 221,
+            "node_i": 112,
+            "node_j": 113,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 222,
+            "node_i": 114,
+            "node_j": 115,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 223,
+            "node_i": 115,
+            "node_j": 116,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 224,
+            "node_i": 116,
+            "node_j": 117,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 225,
+            "node_i": 117,
+            "node_j": 118,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 226,
+            "node_i": 118,
+            "node_j": 119,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 227,
+            "node_i": 120,
+            "node_j": 121,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 228,
+            "node_i": 121,
+            "node_j": 122,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 229,
+            "node_i": 122,
+            "node_j": 123,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 230,
+            "node_i": 123,
+            "node_j": 124,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 231,
+            "node_i": 124,
+            "node_j": 125,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 232,
+            "node_i": 126,
+            "node_j": 127,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 233,
+            "node_i": 127,
+            "node_j": 128,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 234,
+            "node_i": 128,
+            "node_j": 129,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 235,
+            "node_i": 129,
+            "node_j": 130,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 236,
+            "node_i": 130,
+            "node_j": 131,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -15.0,
+                "LIVE": -10.0,
+                "SNOW": 0.0
+            }
+        },
+        {
+            "id": 237,
+            "node_i": 132,
+            "node_j": 133,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -12.0,
+                "LIVE": -5.0,
+                "SNOW": -4.0
+            }
+        },
+        {
+            "id": 238,
+            "node_i": 133,
+            "node_j": 134,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -12.0,
+                "LIVE": -5.0,
+                "SNOW": -4.0
+            }
+        },
+        {
+            "id": 239,
+            "node_i": 134,
+            "node_j": 135,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -12.0,
+                "LIVE": -5.0,
+                "SNOW": -4.0
+            }
+        },
+        {
+            "id": 240,
+            "node_i": 135,
+            "node_j": 136,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -12.0,
+                "LIVE": -5.0,
+                "SNOW": -4.0
+            }
+        },
+        {
+            "id": 241,
+            "node_i": 136,
+            "node_j": 137,
+            "material_id": 2,
+            "load_patterns": {
+                "DEAD": -12.0,
+                "LIVE": -5.0,
+                "SNOW": -4.0
+            }
+        }
+    ],
+    "boundary_conditions": [
+        {
+            "node_id": 0,
+            "dof": 0,
+            "value": 0
+        },
+        {
+            "node_id": 0,
+            "dof": 1,
+            "value": 0
+        },
+        {
+            "node_id": 0,
+            "dof": 2,
+            "value": 0
+        },
+        {
+            "node_id": 1,
+            "dof": 0,
+            "value": 0
+        },
+        {
+            "node_id": 1,
+            "dof": 1,
+            "value": 0
+        },
+        {
+            "node_id": 1,
+            "dof": 2,
+            "value": 0
+        },
+        {
+            "node_id": 2,
+            "dof": 0,
+            "value": 0
+        },
+        {
+            "node_id": 2,
+            "dof": 1,
+            "value": 0
+        },
+        {
+            "node_id": 2,
+            "dof": 2,
+            "value": 0
+        },
+        {
+            "node_id": 3,
+            "dof": 0,
+            "value": 0
+        },
+        {
+            "node_id": 3,
+            "dof": 1,
+            "value": 0
+        },
+        {
+            "node_id": 3,
+            "dof": 2,
+            "value": 0
+        },
+        {
+            "node_id": 4,
+            "dof": 0,
+            "value": 0
+        },
+        {
+            "node_id": 4,
+            "dof": 1,
+            "value": 0
+        },
+        {
+            "node_id": 4,
+            "dof": 2,
+            "value": 0
+        },
+        {
+            "node_id": 5,
+            "dof": 0,
+            "value": 0
+        },
+        {
+            "node_id": 5,
+            "dof": 1,
+            "value": 0
+        },
+        {
+            "node_id": 5,
+            "dof": 2,
+            "value": 0
+        }
+    ],
+    "nodal_loads": [
+        {
+            "node_id": 6,
+            "load_patterns": {
+                "WIND": 0.0,
+                "SEISMIC": 0.5928853754940712
+            }
+        },
+        {
+            "node_id": 12,
+            "load_patterns": {
+                "WIND": 4.5,
+                "SEISMIC": 1.1857707509881423
+            }
+        },
+        {
+            "node_id": 18,
+            "load_patterns": {
+                "WIND": 9.0,
+                "SEISMIC": 1.7786561264822134
+            }
+        },
+        {
+            "node_id": 24,
+            "load_patterns": {
+                "WIND": 13.5,
+                "SEISMIC": 2.3715415019762847
+            }
+        },
+        {
+            "node_id": 30,
+            "load_patterns": {
+                "WIND": 18.0,
+                "SEISMIC": 2.964426877470356
+            }
+        },
+        {
+            "node_id": 36,
+            "load_patterns": {
+                "WIND": 22.5,
+                "SEISMIC": 3.5573122529644268
+            }
+        },
+        {
+            "node_id": 42,
+            "load_patterns": {
+                "WIND": 27.0,
+                "SEISMIC": 4.150197628458498
+            }
+        },
+        {
+            "node_id": 48,
+            "load_patterns": {
+                "WIND": 31.5,
+                "SEISMIC": 4.743083003952569
+            }
+        },
+        {
+            "node_id": 54,
+            "load_patterns": {
+                "WIND": 36.0,
+                "SEISMIC": 5.335968379446641
+            }
+        },
+        {
+            "node_id": 60,
+            "load_patterns": {
+                "WIND": 40.5,
+                "SEISMIC": 5.928853754940712
+            }
+        },
+        {
+            "node_id": 66,
+            "load_patterns": {
+                "WIND": 45.0,
+                "SEISMIC": 6.521739130434782
+            }
+        },
+        {
+            "node_id": 72,
+            "load_patterns": {
+                "WIND": 49.5,
+                "SEISMIC": 7.1146245059288535
+            }
+        },
+        {
+            "node_id": 78,
+            "load_patterns": {
+                "WIND": 54.0,
+                "SEISMIC": 7.707509881422925
+            }
+        },
+        {
+            "node_id": 84,
+            "load_patterns": {
+                "WIND": 58.5,
+                "SEISMIC": 8.300395256916996
+            }
+        },
+        {
+            "node_id": 90,
+            "load_patterns": {
+                "WIND": 63.0,
+                "SEISMIC": 8.893280632411066
+            }
+        },
+        {
+            "node_id": 96,
+            "load_patterns": {
+                "WIND": 67.5,
+                "SEISMIC": 9.486166007905139
+            }
+        },
+        {
+            "node_id": 102,
+            "load_patterns": {
+                "WIND": 72.0,
+                "SEISMIC": 10.079051383399209
+            }
+        },
+        {
+            "node_id": 108,
+            "load_patterns": {
+                "WIND": 76.5,
+                "SEISMIC": 10.671936758893281
+            }
+        },
+        {
+            "node_id": 114,
+            "load_patterns": {
+                "WIND": 81.0,
+                "SEISMIC": 11.264822134387352
+            }
+        },
+        {
+            "node_id": 120,
+            "load_patterns": {
+                "WIND": 85.5,
+                "SEISMIC": 11.857707509881424
+            }
+        },
+        {
+            "node_id": 126,
+            "load_patterns": {
+                "WIND": 90.0,
+                "SEISMIC": 12.450592885375494
+            }
+        },
+        {
+            "node_id": 132,
+            "load_patterns": {
+                "WIND": 94.5,
+                "SEISMIC": 13.043478260869565
+            }
+        }
+    ],
+    "structural_effects": []
+}
