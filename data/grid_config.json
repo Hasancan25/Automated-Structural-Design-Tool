@@ -1,0 +1,30 @@
+{
+    "grid": {
+        "bay_widths": [5.0, 5.0, 5.0, 5.0, 5.0], 
+        "story_heights": [
+            3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 
+            3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 
+            3.0, 3.0
+        ],
+        "column_section": "BU_KOLON_AĞIR",
+        "beam_section": "HE300A",
+        "material_id": 1,
+        "has_bracing": false,
+        "bracing_sequence": [],
+        "brace_material_id": 1
+    },
+    "loads": {
+        "dead_floor_udl": -15.0,
+        "live_floor_udl": -10.0,
+        "roof_dead_udl": -12.0,
+        "roof_live_udl": -5.0,
+        "snow_udl": -4.0,
+        "wind_base": 0.0,
+        "wind_increment": 4.5,
+        "seismic_base_shear_v": 150.0,
+        "seismic_distribution_type": "m_times_h"
+    },
+    "active_combinations": [
+        "ALL"
+    ]
+}
