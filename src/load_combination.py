@@ -1,3 +1,5 @@
+import numpy as np
+
 class LoadCombination:
     """Tek bir yük kombinasyon senaryosunu ve katsayı matrisini temsil eden OOP sınıfı."""
     def __init__(self, name, factors):
@@ -96,3 +98,40 @@ class EnvelopeManager:
         # Eğer eleman kapasiteyi aştıysa, ilgili kombinasyonun tasarımını 'uyarılı' konuma getir
         if dc > 1.0:
             self.combo_summaries[combo_name]["design_warning"] = True
+
+    def calculate_story_drifts(self, nodes, story_height):
+        """
+        Düğüm deplasmanlarını (u) kullanarak katlar arası ötelenmeyi (drift) hesaplar.
+        """
+        self.global_last_drift_results = []
+        self.drift_warning_global = False
+        
+        # 1. Düğümleri Y koordinatlarına göre grupla
+        y_levels = sorted(list(set(round(n.y, 2) for n in nodes)))
+        story_data = {}
+        
+        for level in y_levels:
+            nodes_at_level = [n for n in nodes if round(n.y, 2) == level]
+            # U deplasmanını ortala
+            avg_u = np.mean([getattr(n, 'u', 0.0) for n in nodes_at_level])
+            story_data[level] = avg_u
+            
+        # 2. Katlar arası deplasman farklarını hesapla
+        for i in range(1, len(y_levels)):
+            h_prev = y_levels[i-1]
+            h_curr = y_levels[i]
+            
+            delta = abs(story_data[h_curr] - story_data[h_prev])
+            theta = delta / story_height if story_height > 0 else 0.0
+            
+            status = "LIMIT ASILDI" if theta > 0.008 else "GUVENLI"
+            if status == "LIMIT ASILDI":
+                self.drift_warning_global = True
+            
+            self.global_last_drift_results.append({
+                'story': i,
+                'h': story_height,
+                'delta': delta,
+                'theta': theta,
+                'status': status
+            })
