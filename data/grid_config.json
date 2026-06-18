@@ -1,6 +1,6 @@
 {
     "grid": {
-        "bay_widths": [5.0, 5.0, 5.0, 5.0, 5.0], 
+        "bay_widths": [5.0, 5.0, 5.0, 5.0, 5.0],
         "story_heights": [
             3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 
             3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 
@@ -9,8 +9,20 @@
         "column_section": "BU_KOLON_AĞIR",
         "beam_section": "HE300A",
         "material_id": 1,
-        "has_bracing": false,
-        "bracing_sequence": [],
+        "has_bracing": true,
+        "bracing_sequence": [
+            [true, true, true, true, true], [true, true, true, true, true],
+            [true, true, true, true, true], [true, true, true, true, true],
+            [true, true, true, true, true], [true, true, true, true, true],
+            [true, true, true, true, true], [true, true, true, true, true],
+            [true, true, true, true, true], [true, true, true, true, true],
+            [true, true, true, true, true], [true, true, true, true, true],
+            [true, true, true, true, true], [true, true, true, true, true],
+            [true, true, true, true, true], [true, true, true, true, true],
+            [true, true, true, true, true], [true, true, true, true, true],
+            [true, true, true, true, true], [true, true, true, true, true],
+            [true, true, true, true, true], [true, true, true, true, true]
+        ],
         "brace_material_id": 1
     },
     "loads": {
