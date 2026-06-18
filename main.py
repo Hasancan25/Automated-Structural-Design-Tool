@@ -366,165 +366,126 @@ def export_results(nodes, elements, envelope_results, combo_summaries, config_in
     print("="*50)
 
 class StructuralVisualizer:
-    """Analiz sonuçlarını grafiksel olarak işleyen ve görselleştiren OOP modülü."""
-    
     @staticmethod
-    def plot_deformed_shape(nodes, elements, scale=30.0, total_width=0.0, total_height=0.0):
-        """
-        Çerçevenin orijinal hali ile P-Delta deformation şeklini dinamik simülasyon olarak canlandırır.
-        Eksenleri temizler, toplam boyutları gösterir ve simülasyonu .gif olarak yerel dizine kaydeder.
-        """
+    def plot_deformed_shape(nodes, elements, config, scale=30.0, total_width=0.0, total_height=0.0):
+        plt.rcParams['font.family'] = 'sans-serif'
         fig, ax = plt.subplots(figsize=(10, 8))
         node_dict = {n.id: n for n in nodes}
         
-        # 1. Aşama: Sabit Arka Plan Olarak Çerçevenin Çıplak/Orijinal Halini Gri Çiz (Undeformed)
+        # 1. Sabit Arka Plan (Orijinal Yapı - ÇAPRAZLARI HARİÇ TUT)
         for elem in elements:
+            # Attribute kontrolü
+            mat_id = getattr(elem, 'material_id', getattr(elem, 'material', 0))
+            if hasattr(mat_id, 'id'): mat_id = mat_id.id
+            
+            # Çaprazsa arka planda çizme
+            if mat_id == 3: continue 
+            
             ni = node_dict[elem.node_i.id]
             nj = node_dict[elem.node_j.id]
-            ax.plot([ni.x, nj.x], [ni.y, nj.y], color='#A0A0A0', linestyle='--', linewidth=1.0)
+            ax.plot([ni.x, nj.x], [ni.y, nj.y], color='#CCCCCC', linestyle='--', linewidth=1.0, zorder=1)
             
-        # Animasyonda güncellenecek çizgi nesnelerini (Line2D instances) ilklendiriyoruz
         lines = []
+
+        # A. Kolon ve Kirişleri Ekle (SADECE ÇAPRAZ OLMAYANLAR)
         for elem in elements:
+            mat_id = getattr(elem, 'material_id', getattr(elem, 'material', 0))
+            if hasattr(mat_id, 'id'): mat_id = mat_id.id
+            if mat_id == 3: continue 
+
             ni = node_dict[elem.node_i.id]
             nj = node_dict[elem.node_j.id]
             color = '#1f77b4' if abs(ni.x - nj.x) < 1e-3 else '#ff7f0e'
-            line, = ax.plot([], [], color=color, linewidth=2.0)
+            line, = ax.plot([], [], color=color, linewidth=3.0, zorder=10)
             lines.append((line, ni, nj))
+
+        # B. BRACING (Çaprazlar - SADECE TRUE OLANLAR - KOYU TURUNCU)
+        grid_conf = config.get('grid', {})
+        if grid_conf.get('has_bracing', False):
+            seq = grid_conf.get('bracing_sequence', [])
+            bay_widths = grid_conf.get('bay_widths', [])
+            heights = grid_conf.get('story_heights', [])
             
-        # --- EKSENLERİ TEMİZLE VE BOYUTLARI SABİTLE ---
-        ax.set_title(f"Yapisal Dinamik Simulasyon (Deformed Sway) - Olcek: {scale}x")
-        ax.set_xlabel("")
-        ax.set_ylabel("")
-        ax.set_xticks([])
-        ax.set_yticks([])
+            for story_idx, story_braces in enumerate(seq):
+                y_base = sum(heights[:story_idx])
+                y_top = y_base + heights[story_idx]
+                current_x = 0.0
+                for bay_idx, is_braced in enumerate(story_braces):
+                    bay_w = bay_widths[bay_idx]
+                    
+                    if is_braced:
+                        n_bl = next((n for n in nodes if abs(n.x - current_x) < 0.2 and abs(n.y - y_base) < 0.2), None)
+                        n_tr = next((n for n in nodes if abs(n.x - (current_x + bay_w)) < 0.2 and abs(n.y - y_top) < 0.2), None)
+                        n_br = next((n for n in nodes if abs(n.x - (current_x + bay_w)) < 0.2 and abs(n.y - y_base) < 0.2), None)
+                        n_tl = next((n for n in nodes if abs(n.x - current_x) < 0.2 and abs(n.y - y_top) < 0.2), None)
+                        
+                        if n_bl and n_tr:
+                            line1, = ax.plot([], [], color='#D35400', linewidth=3.0, zorder=15)
+                            lines.append((line1, n_bl, n_tr))
+                        if n_br and n_tl:
+                            line2, = ax.plot([], [], color='#D35400', linewidth=3.0, zorder=15)
+                            lines.append((line2, n_br, n_tl))
+                    current_x += bay_w
+            
+        ax.set_title("Dinamik Deformasyon (P-Delta)", fontsize=14)
+        ax.axis('equal')
         
-        for spine in ax.spines.values():
-            spine.set_visible(False)
-
-        width_text = f"Toplam Aciklik: {total_width:.1f} m"
-        height_text = f"Toplam Yukseklik: {total_height:.1f} m"
-
-        plt.figtext(0.5, 0.05, width_text, wrap=True, horizontalalignment='center', fontsize=12, fontweight='bold', color='#1f77b4')
-        plt.figtext(0.92, 0.5, height_text, wrap=True, horizontalalignment='right', verticalalignment='center', rotation='vertical', fontsize=12, fontweight='bold', color='#ff7f0e')
-
-        ax.set_aspect('equal')
-        
-        # Çerçevenin sallanırken model uzayından taşmaması için sınırları esnetiyoruz
-        x_coords_raw = [n.x for n in nodes]
-        y_coords_raw = [n.y for n in nodes]
-        ax.set_xlim(min(x_coords_raw) - total_width * 0.1, max(x_coords_raw) + total_width * 0.3)
-        ax.set_ylim(min(y_coords_raw) - total_height * 0.05, max(y_coords_raw) + total_height * 0.1)
-
-        # --- DİNAMİK SİNÜS DALGASI SALLANTI SİMÜLEN MOTORU ---
-        num_frames = 60
         def update(frame):
-            # t parametresi 0 ile 1 arasında yumuşak periyodik salınım üretir
-            t = np.sin((frame / num_frames) * np.pi / 2)
-            
+            t = np.sin((frame / 60) * np.pi * 2)
             for line, ni, nj in lines:
-                ni_u = getattr(ni, 'u', 0.0)
-                ni_v = getattr(ni, 'v', 0.0)
-                nj_u = getattr(nj, 'u', 0.0)
-                nj_v = getattr(nj, 'v', 0.0)
-                
-                xi = ni.x + ni_u * scale * t
-                yi = ni.y + ni_v * scale * t
-                xj = nj.x + nj_u * scale * t
-                yj = nj.y + nj_v * scale * t
-                
+                xi = ni.x + getattr(ni, 'u', 0.0) * scale * t
+                yi = ni.y + getattr(ni, 'v', 0.0) * scale * t
+                xj = nj.x + getattr(nj, 'u', 0.0) * scale * t
+                yj = nj.y + getattr(nj, 'v', 0.0) * scale * t
                 line.set_data([xi, xj], [yi, yj])
             return [l[0] for l in lines]
 
-        # Canlı sallantı (sway) simülasyon döngüsü
-        ani = animation.FuncAnimation(fig, update, frames=num_frames, interval=25, blit=True, repeat=True)
+        ani = animation.FuncAnimation(fig, update, frames=60, interval=30, blit=True)
+        try: ani.save("deformed_animation.gif", writer='pillow', fps=20)
+        except Exception as e: print(f"GIF hatası: {e}")
         
-        # --- DİNAMİK ANIMASYONU .GIF OLARAK HEDEF DİZİNE KAYDET ---
-        anim_save_path = os.path.join(os.getcwd(), "deformed_animation.gif")
-        try:
-            ani.save(anim_save_path, writer='pillow', fps=40)
-            print(f" [✓] Dinamik deformasyon grafigi animasyonu basariyla kaydedildi: {anim_save_path}")
-        except Exception as e:
-            print(f" [!] Animasyon kaydetme hatasi: {e}")
-            
-        # Görseli en son karedeyken arka planda stabil resim (.png) olarak da basıyoruz
-        update(num_frames - 1)
-        save_path = os.path.join(os.getcwd(), "deformed_shape.png")
-        try:
-            plt.savefig(save_path, bbox_inches='tight', dpi=300)
-            print(f" [✓] Dinamik deformasyon grafiginin son karesi kaydedildi: {save_path}")
-        except Exception as e:
-            print(f" [!] Grafik kaydetme hatası (Deformed Shape): {e}")
-
-        plt.show()
+        update(15) 
+        plt.savefig("deformed_shape.png", dpi=300)
+        plt.close()
 
     @staticmethod
-    def plot_capacity_heatmap(nodes, elements, envelope_results):
-        """AISC 360 D/C oranlarına göre elemanları renk kodlu kapasite haritası olarak çizer ve kaydeder."""
-        plt.figure(figsize=(10, 8))
+    def plot_capacity_heatmap(nodes, elements, envelope_results, config):
+        fig, ax = plt.subplots(figsize=(10, 8))
         node_dict = {n.id: n for n in nodes}
         
+        # 1. Heatmap (SADECE ELEMANLAR, BRACE HARİÇ)
         for elem in elements:
+            mat_id = getattr(elem, 'material_id', getattr(elem, 'material', 0))
+            if hasattr(mat_id, 'id'): mat_id = mat_id.id
+            if mat_id == 3: continue 
+            
             ni = node_dict[elem.node_i.id]
             nj = node_dict[elem.node_j.id]
-            
-            # Elemanın zarftaki (envelope) maksimum D/C oranını bul
-            dc_i = envelope_results.get(elem.id, {}).get('i', {}).get('dc', 0.0)
-            dc_j = envelope_results.get(elem.id, {}).get('j', {}).get('dc', 0.0)
-            max_dc = max(dc_i, dc_j)
-            
-            # Renk Süzgeci: Güvenliyse Yeşil, Kritikse Sarı, Limit Aşmıssa Kıpkırmızı!
-            if max_dc > 1.0:
-                color = '#D62728' # Canlı Kırmızı
-                linewidth = 3.0
-            elif max_dc > 0.85:
-                color = '#BCBD22' # Uyarı Sarısı
-                linewidth = 2.5
-            else:
-                color = '#2CA02C' # Güvenli Yeşil
-                linewidth = 2.0
-                
-            plt.plot([ni.x, nj.x], [ni.y, nj.y], color=color, linewidth=linewidth)
-            
-        # --- EKSENLERİ TEMİZLE VE BOYUTLARI GÖSTER ---
-        plt.title("AISC 360-16 Kesit Mukavemet Kapasite Haritasi (D/C Heatmap)")
-        
-        plt.xlabel("")
-        plt.ylabel("")
-        plt.gca().set_xticks([])
-        plt.gca().set_yticks([])
-        
-        plt.gca().spines['top'].set_visible(False)
-        plt.gca().spines['right'].set_visible(False)
-        plt.gca().spines['bottom'].set_visible(False)
-        plt.gca().spines['left'].set_visible(False)
+            dc = max(envelope_results.get(elem.id, {}).get('i', {}).get('dc', 0), envelope_results.get(elem.id, {}).get('j', {}).get('dc', 0))
+            color = '#D62728' if dc > 1.0 else ('#BCBD22' if dc > 0.85 else '#2CA02C')
+            ax.plot([ni.x, nj.x], [ni.y, nj.y], color=color, linewidth=4.0, zorder=2)
 
-        if nodes:
-            x_coords_raw = [node.x for node in nodes]
-            y_coords_raw = [node.y for node in nodes]
-            total_width = max(x_coords_raw) - min(x_coords_raw)
-            total_height = max(y_coords_raw) - min(y_coords_raw)
-        else:
-            total_width, total_height = 0.0, 0.0
-
-        width_text = f"Toplam Aciklik: {total_width:.1f} m"
-        height_text = f"Toplam Yukseklik: {total_height:.1f} m"
-
-        plt.figtext(0.5, 0.05, width_text, wrap=True, horizontalalignment='center', fontsize=12, fontweight='bold', color='#1f77b4')
-        plt.figtext(0.92, 0.5, height_text, wrap=True, horizontalalignment='right', verticalalignment='center', rotation='vertical', fontsize=12, fontweight='bold', color='#ff7f0e')
-
-        plt.grid(False)
-        plt.axis('equal')
-        
-        # --- GÜNCELLEME: GÖRSELİ BELİRTİLEN PROJE DİZİNİNE KAYDET ---
-        save_path = os.path.join(os.getcwd(), "capacity_heatmap.png")
-        try:
-            plt.savefig(save_path, bbox_inches='tight', dpi=300)
-            print(f" [✓] Kapasite ısı haritası başarıyla kaydedildi: {save_path}")
-        except Exception as e:
-            print(f" [!] Grafik kaydetme hatası (Capacity Heatmap): {e}")
-
-        plt.show()
+        # 2. Bracing (KOYU TURUNCU - SADECE TRUE)
+        grid_conf = config.get('grid', {})
+        if grid_conf.get('has_bracing', False):
+            seq = grid_conf.get('bracing_sequence', [])
+            bay_widths = grid_conf.get('bay_widths', [])
+            heights = grid_conf.get('story_heights', [])
+            for story_idx, story_braces in enumerate(seq):
+                y_base = sum(heights[:story_idx])
+                y_top = y_base + heights[story_idx]
+                current_x = 0.0
+                for bay_idx, is_braced in enumerate(story_braces):
+                    bay_w = bay_widths[bay_idx]
+                    if is_braced:
+                        ax.plot([current_x, current_x + bay_w], [y_base, y_top], color='#D35400', linewidth=3.0, linestyle='-', alpha=1.0, zorder=10)
+                        ax.plot([current_x + bay_w, current_x], [y_base, y_top], color='#D35400', linewidth=3.0, linestyle='-', alpha=1.0, zorder=10)
+                    current_x += bay_w
+                    
+        ax.set_title("AISC Kapasite Haritası")
+        ax.axis('equal')
+        plt.savefig("capacity_heatmap.png", dpi=300)
+        plt.close()
 
 def main():
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -534,184 +495,137 @@ def main():
     bu_path = os.path.join(current_dir, "data", "built_up_db.json")
     combo_db_path = os.path.join(current_dir, "data", "load_combos_db.json")
     
+    # Raporlama değişkenlerini döngü dışına tanımlıyoruz (Crash olmaması için)
+    nodes, elements = [], []
+    envelope_results, combo_summaries = {}, {}
+    
     try:
-        # 1. Konfigürasyonları ve Üçlü Veritabanı Katmanlarını Yükle
-        if os.path.exists(config_path):
-            with open(config_path, 'r', encoding='utf-8') as f: config = json.load(f)
-        else: config = {"grid": {"has_bracing": False}}
+        # Verileri yükle
+        with open(config_path, 'r', encoding='utf-8') as f: config = json.load(f)
+        with open(db_path, 'r', encoding='utf-8') as f: section_db = json.load(f)
+        with open(bu_path, 'r', encoding='utf-8') as f: built_up_db = json.load(f)
+        with open(combo_db_path, 'r', encoding='utf-8') as f: combo_db = json.load(f)
+        with open(json_path, 'r', encoding='utf-8') as f: raw_input = json.load(f)
+        
+        from src.validator import validate_input
+        if not validate_input(raw_input): return 
 
-        if os.path.exists(db_path):
-            with open(db_path, 'r', encoding='utf-8') as f: section_db = json.load(f)
-        else: section_db = {}
-
-        if os.path.exists(bu_path):
-            with open(bu_path, 'r', encoding='utf-8') as f: built_up_db = json.load(f)
-        else: built_up_db = {}
-            
-        if os.path.exists(combo_db_path):
-            with open(combo_db_path, 'r', encoding='utf-8') as f: combo_db = json.load(f)
-        else: combo_db = {}
-
-        # Aktif kombinasyon listesini grid_config'den çek
         active_combos = config.get("active_combinations", ["COMB_01"])
+        if "ALL" in active_combos or "all" in active_combos: active_combos = list(combo_db.keys())
         
-        # --- GERÇEK PARAMETRİK DİNAMİK BAĞLANTI KATMANI (JOKER KONTROLÜ VE FIX) ---
-        if "ALL" in active_combos or "all" in active_combos:
-            active_combos = list(combo_db.keys())
-        
-        # --- OOP KOMBİNASYON VE ZARF MOTORU ENJEKSİYONU ---
         envelope_manager = EnvelopeManager()
+        
+        # Kombinasyonları ilklendir
+        for c in active_combos:
+            envelope_manager.combo_summaries[c] = {
+                "max_u": 0.0, "drift_warning": False, "design_warning": False, "factors": combo_db.get(c, {})
+            }
+        
         envelope_results = envelope_manager.envelope_results
         combo_summaries = envelope_manager.combo_summaries
         
-        u_pdelta = None
-        b2_factor = 1.0
-
-        # --- HARİCİ KÜTÜPHANEDEN GEOMETRİK ÖZELLİK ÖN OKUMASI (OOP FABRİKASINA BAĞLANDI) ---
         column_profile = config['grid'].get('column_section', 'IPE200')
         beam_profile = config['grid'].get('beam_section', 'HEA300')
-        
-        # Fabrika modülü üzerinden bağımsız kesit nesneleri üretilir
         col_sec = SectionFactory.create_section(column_profile, section_db, built_up_db)
         beam_sec = SectionFactory.create_section(beam_profile, section_db, built_up_db)
 
-        # --- PARAMETRİK MASTER KOMBİNASYON DÖNGÜSÜ ---
-        for c_name in active_combos:
-            if c_name not in combo_db:
-                print(f" [!] {c_name} yuk kombinasyon kütüphanesinde bulunamadi, atlaniyor.")
-                continue
+        # Helper fonksiyon
+        def apply_member_properties(elements, col_sec, beam_sec, column_profile, beam_profile, factors=None, raw_elems=None):
+            STEEL_DENSITY = 7850.0
+            for elem in elements:
+                if abs(elem.node_i.x - elem.node_j.x) < 1e-3: 
+                    elem.section_name, elem.material.A, elem.material.I = column_profile, col_sec.A, col_sec.I
+                    elem.section_Z, elem.section_d = col_sec.Z, col_sec.d
+                else: 
+                    elem.section_name, elem.material.A, elem.material.I = beam_profile, beam_sec.A, beam_sec.I
+                    elem.section_Z, elem.section_d = beam_sec.Z, beam_sec.d
                 
-            factors = combo_db[c_name]
-            print(f"[+] Kombinasyon Cozuluyor: {c_name} -> DEAD:{factors.get('DEAD',0)}, LIVE:{factors.get('LIVE',0)}, WIND:{factors.get('WIND',0)}, SEISMIC:{factors.get('SEISMIC',0)}")
-            
-            # 2. Analiz Verisini input.json üzerinden her kombinasyon için temiz yükle
-            nodes, elements, bc, _, _ = IOHandler.load_input(json_path, ndof=3)
-            with open(json_path, 'r', encoding='utf-8') as f:
-                raw_input = json.load(f)
+                if factors and raw_elems:
+                    pats = raw_elems.get(elem.id, {"DEAD": 0.0, "LIVE": 0.0, "SNOW": 0.0})
+                    elem.udl = (pats.get("DEAD", 0.0) * factors.get("DEAD", 0.0)) + (pats.get("LIVE", 0.0) * factors.get("LIVE", 0.0)) + (pats.get("SNOW", 0.0) * factors.get("SNOW", 0.0))
+                
+                length = np.sqrt((elem.node_i.x - elem.node_j.x)**2 + (elem.node_i.y - elem.node_j.y)**2)
+                elem.mass = elem.material.A * length * STEEL_DENSITY
+                elem.mass_moment_inertia = elem.mass * (length**2) / 12.0 if length > 0 else 1e-6
+
+        # 1. Modal Analiz Ön Hazırlık
+        nodes_init, elements_init, bc_init, _, _ = IOHandler.load_input(json_path, ndof=3)
+        apply_member_properties(elements_init, col_sec, beam_sec, column_profile, beam_profile)
+        
+        print(f"\n[+] Modal Analiz Başlıyor...")
+        try:
+            modal_solver = StructuralSolver(nodes_init, elements_init, bc_init, ndof=3, penalty=1e12)
+            modal_solver.run_modal_analysis(num_modes=3)
+        except Exception as e:
+            print(f" [!] Modal analiz hatası: {e}")
+
+        # 2. Kombinasyon Döngüsü
+        print("DEBUG: Kombinasyon döngüsüne giriliyor...")
+        for c_name in active_combos:
+            try:
+                if c_name not in combo_db: continue
+                factors = combo_db[c_name]
+                nodes, elements, bc, _, _ = IOHandler.load_input(json_path, ndof=3)
+                
                 raw_elems = {e['id']: e.get('load_patterns', {"DEAD": 0.0, "LIVE": 0.0, "SNOW": 0.0}) for e in raw_input.get('elements', [])}
                 nodal_loads = raw_input.get('nodal_loads', [])
+                
+                apply_member_properties(elements, col_sec, beam_sec, column_profile, beam_profile, factors, raw_elems)
+                scaled_nodal_loads = [{"node_id": nl["node_id"], "fx": (nl.get("load_patterns", {}).get("WIND", 0.0) * factors.get("WIND", 0.0)) + (nl.get("load_patterns", {}).get("SEISMIC", 0.0) * factors.get("SEISMIC", 0.0)), "fy": 0.0, "mz": 0.0} for nl in nodal_loads]
 
-            # A. Eleman Rijitliklerini Besle ve Nesne Özniteliklerini Doğrudan Aktar
-            for elem in elements:
-                if abs(elem.node_i.x - elem.node_j.x) < 1e-3: # Kolon Sınıfı
-                    elem.section_name = column_profile; elem.material.A = col_sec.A; elem.material.I = col_sec.I
-                    elem.section_Z = col_sec.Z; elem.section_d = col_sec.d
-                    elem.udl = 0.0
-                else: # Kiriş Sınıfı
-                    elem.section_name = beam_profile; elem.material.A = beam_sec.A; elem.material.I = beam_sec.I
-                    elem.section_Z = beam_sec.Z; elem.section_d = beam_sec.d
-                    pats = raw_elems.get(elem.id, {"DEAD": 0.0, "LIVE": 0.0, "SNOW": 0.0})
-                    elem.udl = (pats.get("DEAD", 0.0) * factors.get("DEAD", 0.0)) + \
-                               (pats.get("LIVE", 0.0) * factors.get("LIVE", 0.0)) + \
-                               (pats.get("SNOW", 0.0) * factors.get("SNOW", 0.0))
-            
-            # B. Düğüm Noktası Yanal Yüklerini Katsayılarla Kombine Et
-            scaled_nodal_loads = []
-            for nl in nodal_loads:
-                pats = nl.get("load_patterns", {"WIND": 0.0, "SEISMIC": 0.0})
-                fx_combined = (pats.get("WIND", 0.0) * factors.get("WIND", 0.0)) + \
-                              (pats.get("SEISMIC", 0.0) * factors.get("SEISMIC", 0.0))
-                scaled_nodal_loads.append({"node_id": nl["node_id"], "fx": fx_combined, "fy": 0.0, "mz": 0.0})
+                solver = StructuralSolver(nodes, elements, bc, nodal_loads=scaled_nodal_loads, ndof=3, penalty=1e12)
+                MemberLoadEffect().apply(solver)
+                
+                u_linear = solver.solve().copy()
+                u_pdelta = solver.solve_pdelta() 
+                
+                # Tasarım Kontrolü
+                designer = DesignChecker()
+                for elem in elements:
+                    f = getattr(elem, 'internal_forces', None)
+                    if not f: continue
+                    type_str = f"Kolon ({column_profile})" if abs(elem.node_i.x - elem.node_j.x) < 1e-3 else f"Kiris ({beam_profile})"
+                    dc_results = designer.compute_member_dc(elem)
+                    for uc in ["i", "j"]:
+                        dc = dc_results[uc]['dc']
+                        envelope_manager.update_element_envelope(c_name, elem.id, type_str, uc, f['N'+uc], f['V'+uc], f['M'+uc], dc)
 
-            # 3. Analizi Gerçekleştir (YALIN ÇİFT ANALİZ KATMANI)
-            solver = StructuralSolver(nodes, elements, bc, nodal_loads=scaled_nodal_loads, ndof=3, penalty=1e12)
-            MemberLoadEffect().apply(solver)
-            
-            u_linear = solver.solve().copy()
-            u_pdelta = solver.solve_pdelta() 
-            
-            # 4. B2 Amplifikasyon Katsayısı Hesaplama Adımı
-            max_u_linear = np.max(np.abs(u_linear[0::3]))
-            max_u_pdelta = np.max(np.abs(u_pdelta[0::3]))
-            b2_factor = max_u_pdelta / max_u_linear if max_u_linear > 1e-9 else 1.0
+                max_u = np.max(np.abs(u_pdelta[0::3]))
+                envelope_manager.combo_summaries[c_name]["max_u"] = max_u
+                print(f" [✓] Analiz {c_name} tamamlandı.")
+            except Exception as e:
+                print(f" [!] {c_name} hata verdi: {e}")
 
-            # --- 5. GÖRELİ KAT ÖTELENMELERİ (DRIFT) ALGORİTMASI ---
-            y_coords = sorted(list(set([node.y for node in nodes])))
-            current_drift_results = []
-            drift_warning = False
-            drift_limit = 0.008  
-            max_theta_combo = 0.0
-            
-            for idx in range(1, len(y_coords)):
-                y_curr = y_coords[idx]
-                y_prev = y_coords[idx-1]
-                h_story = y_curr - y_prev
-                
-                nodes_curr = [n for n in nodes if abs(n.y - y_curr) < 1e-3]
-                nodes_prev = [n for n in nodes if abs(n.y - y_prev) < 1e-3]
-                
-                u_curr = np.max([abs(getattr(n, 'u', 0.0)) for n in nodes_curr])
-                u_prev = np.max([abs(getattr(n, 'u', 0.0)) for n in nodes_prev])
-                
-                delta_story = abs(u_curr - u_prev)
-                theta = delta_story / h_story
-                
-                if theta > max_theta_combo: max_theta_combo = theta
-                
-                if theta > drift_limit:
-                    status = "LIMIT ASILDI"
-                    drift_warning = True
-                else:
-                    status = "GUVENLI"
-                    
-                current_drift_results.append({
-                    'story': idx, 'h': h_story, 'delta': delta_story, 'theta': theta, 'status': status
-                })
-            
-            envelope_manager.initialize_combo_summary(c_name, np.max(np.abs(u_pdelta)), max_theta_combo, drift_warning, current_drift_results, factors)
-
-            # --- 6. ELEMAN BAZLI ZARF (ENVELOPE) MUKAVEMET SÜZGECİ (YENİ OOP DESIGNCHECKER ENTEGRASYONU) ---
-            designer = DesignChecker()  # GÜNCELLEME: Yeni Kapsüllenmiş Tasarım Sınıfı Çağrısı
-            
-            for elem in elements:
-                f = getattr(elem, 'internal_forces', None)
-                if not f: continue
-                
-                if abs(elem.node_i.x - elem.node_j.x) < 1e-3: 
-                    type_str = f"Kolon ({column_profile})"
-                else: 
-                    type_str = f"Kiris ({beam_profile})"
-                    
-                # GÜNCELLEME: Elemanın iki ucu için LRFD D/C oranlarını yeni modülümüzden çekiyoruz
-                dc_results = designer.compute_member_dc(elem)
-                
-                # İki ucu birden denetle (i ve j) - Tüm limit durum matematiği design.py içinde gizlidir
-                for uc in ["i", "j"]:
-                    dc = dc_results[uc]['dc']
-                    envelope_manager.update_element_envelope(c_name, elem.id, type_str, uc, f['N'+uc], f['V'+uc], f['M'+uc], dc)
-
-        # Kümülatif undeformed boyutları hesapla
+        # 3. Raporlama
         if nodes:
+            # GÜVENLİ DRIFT HESABI
+            try:
+                envelope_manager.calculate_story_drifts(nodes, 3.0)
+            except AttributeError:
+                print(" [!] HATA: src/load_combination.py içinde 'calculate_story_drifts' bulunamadı.")
+            
             x_coords_raw = [node.x for node in nodes]
             y_coords_raw = [node.y for node in nodes]
             total_width = max(x_coords_raw) - min(x_coords_raw)
             total_height = max(y_coords_raw) - min(y_coords_raw)
-        else:
-            total_width, total_height = 0.0, 0.0
-
-        # --- 7. DIŞA AKTAR ---
-        config_info = {
-            'has_bracing': config['grid'].get('has_bracing', False),
-            'sequence': config['grid'].get('bracing_sequence', "Standart"),
-            'brace_mat_id': config['grid'].get('brace_material_id', 1),
-            'max_u': np.max(np.abs(u_pdelta)) if u_pdelta is not None else 0.0,
-            'b2_factor': b2_factor,
-            'drift_results': envelope_manager.global_last_drift_results,  
-            'drift_warning': envelope_manager.drift_warning_global,
-            'column_section': column_profile,  
-            'beam_section': beam_profile       
-        }
+            
+            config_info = {
+                'has_bracing': config['grid'].get('has_bracing', False),
+                'drift_results': envelope_manager.global_last_drift_results,
+                'drift_warning': envelope_manager.drift_warning_global,
+                'column_section': column_profile,
+                'beam_section': beam_profile
+            }
+            export_results(nodes, elements, envelope_results, combo_summaries, config_info)
+            StructuralVisualizer.plot_deformed_shape(nodes, elements, config, scale=30.0, total_width=total_width, total_height=total_height)
+            StructuralVisualizer.plot_capacity_heatmap(nodes, elements, envelope_results, config)
         
-        export_results(nodes, elements, envelope_results, combo_summaries, config_info)
-
-        # --- 8. GRAFİKSEL SON İŞLEM GÖRSELLEŞTİRME ---
-        print("\n[+] Analiz Sonuclari Grafiksel Olarak Basincli Isı Haritasina Dokuluyor...")
-        StructuralVisualizer.plot_deformed_shape(nodes, elements, scale=30.0, total_width=total_width, total_height=total_height)
-        StructuralVisualizer.plot_capacity_heatmap(nodes, elements, envelope_results)
-
+        print("\n" + "="*50)
+        print(" ANALİZ TAMAMLANDI ".center(50, "="))
+        print("="*50)
     except Exception as e:
-        print(f"\n [!] KRITIK HATA: {str(e)}")
         traceback.print_exc()
+        input("Hata oluştu, ENTER ile kapat...")
 
 if __name__ == "__main__":
     main()
