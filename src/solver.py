@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.sparse import lil_matrix
 from scipy.sparse.linalg import spsolve
+from scipy.linalg import eigh  # Modal Analiz (Eigenvalue) çözücüsü için eklendi
 
 class StructuralSolver:
     def __init__(self, nodes, elements, boundary_conditions, nodal_loads=None, ndof=3, penalty=1e12):
@@ -159,16 +160,12 @@ class StructuralSolver:
         print("[+] PROGRESSIVE P-DELTA SOLVER BAŞLATILDI".center(50, " "))
         print("-"*50)
         
-        # 1. Adım: İlk lineer elastik çözümü yap (K_linear @ U = F)
         u_old = self.solve().copy()
         
         for iteration in range(1, max_iter + 1):
-            # 2. Adım: Temiz lineer matrisi ve yük vektörünü sıfırdan kur
             self.assemble()
             
-            # 3. Adım: Her elemanın güncel eksenel kuvvetine göre Kg matrisini ekle
             for elem in self.elements:
-                # Eksenel kuvvet olarak j ucundaki kuvveti baz alıyoruz (Nj: + Tension, - Compression)
                 N = elem.internal_forces['Nj']
                 
                 T = self.get_transformation_matrix(elem)
@@ -179,12 +176,10 @@ class StructuralSolver:
                 j_idx = self.node_map[elem.node_j.id] * 3
                 dofs = list(range(i_idx, i_idx+3)) + list(range(j_idx, j_idx+3))
                 
-                # Geometrik rijitliği küresel K matrisine süperpoze et
                 for i, r_idx in enumerate(dofs):
                     for j, c_idx in enumerate(dofs):
                         self.K_global[r_idx, c_idx] += kg_global[i, j]
             
-            # 4. Adım: Sınır Şartlarını (Penalty) Güncellenmiş K_global matrisine yeniden uygula
             for bc_data in self.bc:
                 n_id, dof, val = bc_data
                 if n_id in self.node_map:
@@ -192,12 +187,10 @@ class StructuralSolver:
                     self.K_global[idx, idx] += self.penalty
                     self.F_global[idx] += float(val) * self.penalty
             
-            # 5. Adım: Güncellenmiş matris sistemini çöz ve kuvvetleri yeniden hesapla
             self.displacements = spsolve(self.K_global.tocsr(), self.F_global)
             self.calculate_internal_forces()
             u_new = self.displacements
             
-            # 6. Adım: İterasyonlar arası yakınsama kontrolü
             norm_diff = np.linalg.norm(u_new - u_old)
             norm_ref = np.linalg.norm(u_new)
             error = norm_diff / (norm_ref + 1e-12)
@@ -214,3 +207,61 @@ class StructuralSolver:
         print("\n[!] UYARI: P-Delta maksimum iterasyona ulaştı ama hedeflenen toleransa yakınsayamadı!")
         print("-"*50)
         return self.displacements
+
+    # =========================================================================
+    # YENİ EKLENTİ: DİNAMİK MODAL (DOĞAL FREKANS) ANALİZ MOTORU
+    # =========================================================================
+
+    def run_modal_analysis(self, num_modes=3):
+        print("\n[+] Yapısal Dinamik (Modal) Analiz Başlatılıyor...")
+        
+        # 1. Kütle Matrisini oluştur
+        M_global = np.eye(self.num_dof) * 1e-3 
+        
+        for elem in self.elements:
+            # main.py'de atadığımız mass değerini direkt çek
+            m_total = getattr(elem, 'mass', 1.0)
+            inertia = getattr(elem, 'mass_moment_inertia', 1e-3)
+            
+            m_node = m_total / 2.0
+            
+            i_idx = self.node_map[elem.node_i.id] * 3
+            j_idx = self.node_map[elem.node_j.id] * 3
+            
+            # Kütleleri ekle
+            for idx in [i_idx, i_idx+1, j_idx, j_idx+1]:
+                M_global[idx, idx] += m_node
+            
+            # Rotasyonel atalet
+            M_global[i_idx+2, i_idx+2] += inertia / 2.0
+            M_global[j_idx+2, j_idx+2] += inertia / 2.0
+
+        self.assemble() # K matrisini kur
+        
+        # Sınır şartlarını K'ya ekle
+        for bc_data in self.bc:
+            n_id, dof, val = bc_data
+            idx = self.node_map[n_id] * 3 + int(dof)
+            self.K_global[idx, idx] += self.penalty
+            # Sınır şartı olan düğüme kütle ekle (Matris dengesi için)
+            M_global[idx, idx] += 1.0
+
+        K_dense = self.K_global.toarray()
+        
+        try:
+            eigenvalues, eigenvectors = eigh(K_dense, M_global)
+        except Exception as e:
+            print(f"[!] Modal hata: {e}")
+            return []
+
+        valid_idx = eigenvalues > 1e-5
+        w_squared = eigenvalues[valid_idx]
+        periods = 2 * np.pi / np.sqrt(w_squared)
+        
+        results = []
+        for i in range(min(num_modes, len(periods))):
+            T = periods[i]
+            freq = 1.0 / T if T > 0 else 0
+            results.append({'mode': i + 1, 'period': T, 'frequency': freq})
+            
+        return results
