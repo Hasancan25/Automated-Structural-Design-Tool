@@ -1,80 +1,74 @@
 import numpy as np
 
-class DesignChecker:
-    """AISC 360-16 Standartlarına Göre Çelik Eleman Tasarım ve Kapasite Kontrol Modülü."""
-    
-    def __init__(self, phi_b=0.90, phi_c=0.90):
-        self.phi_b = phi_b  # Eğilme için LRFD dayanım azaltma katsayısı
-        self.phi_c = phi_c  # Aksiyel (Çekme/Basınç) için LRFD dayanım azaltma katsayısı
+class AISCSteelDesigner:
+    """
+    AISC 360-16 (Çelik Yapıların Tasarım Yönetmeliği) standartlarına göre 
+    çubuk elemanların narinlik, burkulma ve kapasite etkileşim tahkiklerini 
+    tamamen nesne tabanlı yürüten Çelik Tasarım Motoru sınıfı.
+    """
+    def __init__(self, Fy=275000.0, E=2.0e8, phi_c=0.90, phi_b=0.90):
+        self.Fy = Fy          # Çelik akma dayanımı (kPa - SI Entegrasyonu)
+        self.E = E            # Çelik elastisite modülü (kPa)
+        self.phi_c = phi_c    # Basınç/Eksenel emniyet katsayısı (AISC Chapter E)
+        self.phi_b = phi_b    # Eğilme/Moment emniyet katsayısı (AISC Chapter F)
 
-    def compute_member_dc(self, elem):
+    def calculate_dc_ratio(self, elem, uc):
         """
-        Tek bir elemanın i ve j uçlarındaki AISC 360-16 Demand/Capacity (D/C) 
-        oranlarını LRFD etkileşim denklemlerini kullanarak hesaplar.
+        Belirtilen eleman ucu ('i' veya 'j') için AISC Chapter H1-1 
+        etkileşim (Kapasite/Zorlanma - D/C) oranını bağımsız hesaplar.
         """
-        # Elemanın malzeme özelliklerini güvenli bir şekilde oku (main.py'de elem.material altına yazılıyor)
-        Fy = getattr(elem.material, 'Fy', 250000.0)  # Varsayılan Akma Gerilmesi: 250 MPa (kN/m2)
-        A = getattr(elem.material, 'A', 0.01)        # Kesit Alanı (m2)
-        I = getattr(elem.material, 'I', 1e-4)        # Atalet Momenti (m4)
-        
-        # KRİTİK GÜNCELLEME: main.py kesit derinliğini direkt eleman (elem) üzerine 'section_d' olarak basıyor
-        d = getattr(elem, 'section_d', 0.3)          # Profil Derinliği (m)
-        
-        # KRİTİK GÜNCELLEME: Plastik mukavemet momenti direkt eleman üzerindeki 'section_Z' niteliğinden okunur
-        if hasattr(elem, 'section_Z') and elem.section_Z is not None:
-            Z = elem.section_Z
-        else:
-            S = (2.0 * I) / d if d > 0 else 1e-4
-            Z = 1.15 * S  # Şekil faktörü yaklaşımı (Shape factor ~ 1.15)
-
-        # LRFD Nominal Dayanımların Hesaplanması
-        Pn = Fy * A  # Nominal eksenel kapasite
-        Mn = Fy * Z  # Nominal eğilme momenti kapasitesi
-        
-        phi_Pn = self.phi_c * Pn
-        phi_Mn = self.phi_b * Mn
-
-        # Solver tarafından hesaplanan iç kuvvetleri kontrol et
-        forces = getattr(elem, 'internal_forces', None)
-        if not forces:
-            return {'i': {'dc': 0.0}, 'j': {'dc': 0.0}}
-
-        # i-Ucu (Eleman Başlangıcı) Etkileşim Kontrolü
-        Pu_i = abs(forces['Ni'])
-        Mu_i = abs(forces['Mi'])
-        dc_i = self._aisc_interaction(Pu_i, Mu_i, phi_Pn, phi_Mn)
-
-        # j-Ucu (Eleman Bitişi) Etkileşim Kontrolü
-        Pu_j = abs(forces['Nj'])
-        Mu_j = abs(forces['Mj'])
-        dc_j = self._aisc_interaction(Pu_j, Mu_j, phi_Pn, phi_Mn)
-
-        return {
-            'i': {'dc': round(dc_i, 4)},
-            'j': {'dc': round(dc_j, 4)}
-        }
-
-    def _aisc_interaction(self, Pu, Mu, phi_Pn, phi_Mn):
-        """AISC 360-16 H1.1 Eksenel Kuvvet ve Eğilme Momenti Etkileşim Formülleri"""
-        if phi_Pn == 0 or phi_Mn == 0:
+        f = getattr(elem, 'internal_forces', None)
+        if not f:
             return 0.0
-        
-        axial_ratio = Pu / phi_Pn
-        
-        # AISC Denklem H1-1a ve H1-1b Sınır Kontrolü
-        if axial_ratio >= 0.2:
-            dc = axial_ratio + (8.0 / 9.0) * (Mu / phi_Mn)
-        else:
-            dc = (axial_ratio / 2.0) + (Mu / phi_Mn)
-            
-        return dc
 
-    def check_all_elements(self, elements):
-        """
-        Sistemdeki tüm elemanları tarar ve visualization.py ile tam uyumlu
-        bir kapasite zarfı (envelope_results) sözlüğü döndürür.
-        """
-        envelope_results = {}
-        for elem in elements:
-            envelope_results[elem.id] = self.compute_member_dc(elem)
-        return envelope_results
+        # Eleman geometrik ve mekanik nesne özniteliklerini oku
+        L = elem.get_length()
+        A = elem.material.A
+        I = elem.material.I
+        Z = getattr(elem, 'section_Z', 0.0)
+
+        if A <= 0 or I <= 0:
+            return 0.0
+
+        # 1. NARİNLİK VE KRİTİK BURKULMA GERİLMESİ HESABI (AISC Chapter E)
+        r = np.sqrt(I / A)
+        slenderness = L / r
+        
+        # Euler burkulma gerilmesi (Fe)
+        Fe = (np.pi**2 * self.E) / (slenderness**2) if slenderness > 0 else 1.0e10
+        lambda_lim = 4.71 * np.sqrt(self.E / self.Fy)
+        
+        # Kritik burkulma gerilmesi (Fcr)
+        Fcr = (0.658**(self.Fy / Fe)) * self.Fy if slenderness <= lambda_lim else 0.877 * Fe
+
+        # 2. UÇ KUVVETLERİNİN AYRIŞTIRILMASI
+        N_force = f['N' + uc]
+        Pu = abs(N_force)
+        Mu = abs(f['M' + uc])
+
+        # 3. NOMİNAL EKSENEL KAPASİTE HESABI (Pn)
+        if N_force < 0:
+            # Eleman basınçta ise burkulma tahkiki (AISC Chapter E)
+            Pn = Fcr * A
+        else:
+            # Eleman çekmede ise akma tahkiki (AISC Chapter D)
+            Pn = self.Fy * A
+
+        # 4. NOMİNAL EĞİLME MOMENTİ KAPASİTE HESABI (Mn - AISC Chapter F)
+        Mn = self.Fy * Z
+
+        if Pn <= 0 or Mn <= 0:
+            return 0.0
+
+        # 5. AISC H1-1 ETKİLEŞİM DENKLEM SETLERİ (Chapter H)
+        ratio_P = Pu / (self.phi_c * Pn)
+        ratio_M = Mu / (self.phi_b * Mn)
+
+        if ratio_P >= 0.2:
+            # Baskın eksenel yük denklemi (AISC Eq. H1-1a)
+            dc = ratio_P + (8.0 / 9.0) * ratio_M
+        else:
+            # Baskın eğilme momenti denklemi (AISC Eq. H1-1b)
+            dc = (ratio_P / 2.0) + ratio_M
+
+        return dc
